@@ -97,7 +97,7 @@ df <- raw |>
     employed = as.integer(inlf == 1),
     college = as.integer(educ >= 16),
     log_wage = if_else(                               # `log_wage`: log wage for those in the labor force
-      inlf == 1 & lwage > 0,
+      inlf == 1,
       lwage,
       NA_real_
     ),
@@ -137,7 +137,7 @@ tibble(outliers = n_outliers) |>
     col.names = "Outliers")
 ```
 
-`r if (n_outliers == 0) "No outliers detected." else paste(n_outliers, "outliers detected.")`
+`r if (n_outliers == 0) "No outliers detected." else paste(n_outliers, "outliers detected; they are retained in the analytic sample.")`
 
 ## Figures
 
@@ -252,7 +252,7 @@ fig_alt <- paste(
 combined_plot <- (p1 + p2) / (p3 + p4) +
   plot_annotation(
     title = "Labor market outcomes based on Mroz (1987)",
-    subtitle = paste("Analytic sample:", comma(nrow(analytic)), "employed married women with positive wages"),
+    subtitle = paste("Analytic sample:", comma(nrow(analytic)), "employed married women"),
     caption = "Data: Mroz (1987), Panel Study of Income Dynamics, via the {wooldridge} R package.",
     theme = theme(plot.title = element_text(size = 16)))
 
@@ -270,16 +270,16 @@ wage_by_educ |>
 
 ```{r OLS regression model using Mincer earnings equation}
 # Specify model
-ols <- lm(log_wage ~ educ + exper + exper2 + faminc, data = analytic)
+ols <- lm(log_wage ~ educ + exper + exper2 + nwifeinc, data = analytic)
 
 term_labels <- c(
   "(Intercept)" = "Intercept",
   educ = "Education (years)",
   exper = "Experience (years)",
   exper2 = "Experience squared",
-  faminc = "Family income ($)")
+  nwifeinc = "Other family income ($1,000s)")
 
-sig4 <- function(x) formatC(x, digits = 4, format = "g")   # 4 significant digits; the `faminc` estimate is tiny
+sig4 <- function(x) formatC(x, digits = 4, format = "g")   # 4 significant digits
 
 # Robust coefficient table
 coeftest(ols, vcov = vcovHC(ols, type = "HC3")) |>
@@ -321,13 +321,15 @@ glance(ols) |>
 OLS results suggest that education is positively associated with wages.
 
 ```{r Interpretation}
-b <- coef(ols) ; peak_exp <- -b["exper"] / (2 * b["exper2"])
-
-tibble(
-  interpretation = c("Return to education (%)", "Peak experience (years)"),
-  value = c(round(b["educ"] * 100, 2),  round(peak_exp, 1))) |>
+tidy_ols |>
+  filter(term == "educ") |>
+  transmute(
+    interpretation = "Return to education (%)",
+    value = estimate * 100,
+    lower = conf.low * 100,
+    upper = conf.high * 100) |>
   a11y_table(
     caption = "Table 9. Interpretation of the OLS estimates",
     digits = 2,
-    col.names = c("Quantity", "Value"))
+    col.names = c("Quantity", "Value", "95% CI lower", "95% CI upper"))
 ```
