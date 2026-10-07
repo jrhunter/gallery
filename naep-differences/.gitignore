@@ -1,0 +1,4 @@
+*.quarto_ipynb
+.Rhistory
+fetch.log
+_shots/

@@ -1,0 +1,333 @@
+---
+title: "Code Sample"
+author: "James Robert Hunter"
+lang: en
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    highlight: arrow
+---
+
+```{css, echo=FALSE}
+/* Accessibility: bold left-aligned captions, dark table text, visible keyboard focus */
+caption, .caption, p.caption { color: #333333; font-weight: bold; text-align: left; }
+a:focus, [tabindex]:focus { outline: 3px solid #0072B2; outline-offset: 2px; }
+.table th, .table td { color: #1a1a1a; }
+```
+
+## Research question
+
+Do levels of educational attainment predict wage outcomes?
+
+This analysis uses the `Mroz` dataset from the `{wooldridge}` package, based on married women's labor supply data from the PSID (Mroz, 1987).
+
+```{r setup, message=FALSE, warning=FALSE}
+pkgs <- c("tidyverse", "wooldridge", "broom", "quantreg", "sandwich", "lmtest", "patchwork", "scales", "knitr", "kableExtra")
+invisible(lapply(pkgs, library, character.only = TRUE)) ; rm(pkgs)
+data("mroz", package = "wooldridge") ; raw <- as_tibble(mroz)
+
+opts_chunk$set(dpi = 200, out.width = "100%")
+
+# Table helper
+a11y_table <- function(x, caption, digits = 3, ...) {
+  out <- kable(x, format = "html", caption = caption, digits = digits, format.args = list(big.mark = ","), ...) |>
+    kable_styling(bootstrap_options = c("striped", "condensed"), full_width = FALSE, position = "left")
+  out[1] <- gsub("<th ", '<th scope="col" ', out[1], fixed = TRUE)   # mark column headers for screen readers
+  out
+}
+
+# Plot defaults
+blue <- "#0072B2" ; orange <- "#D55E00"               # Okabe-Ito palette (colorblind-safe)
+
+theme_set(
+  theme_minimal(base_size = 12) +
+    theme(
+      plot.title = element_text(face = "bold", size = 13),
+      panel.grid.minor = element_blank(),
+      legend.position = "top"))
+```
+
+The data contain `r comma(nrow(raw))` observations of `r ncol(raw)` variables: `r paste0("<code>", names(raw), "</code>", collapse = ", ")`.
+
+## Data checks
+
+```{r Missing values}
+raw |>
+  summarise(across(everything(), ~ sum(is.na(.)))) |>
+  pivot_longer(
+    everything(),
+    names_to = "variable",
+    values_to = "n_missing"
+  ) |> filter(n_missing > 0) |>
+  a11y_table(
+    caption = "Table 1. Variables with missing values",
+    col.names = c("Variable", "Missing values"))
+```
+
+```{r Descriptive statistics}
+raw |>
+  select(where(is.numeric)) |>
+  pivot_longer(everything(), names_to = "variable") |>
+  summarise(
+    n = sum(!is.na(value)),
+    mean = mean(value, na.rm = TRUE),
+    sd = sd(value, na.rm = TRUE),
+    min = min(value, na.rm = TRUE),
+    median = median(value, na.rm = TRUE),
+    max = max(value, na.rm = TRUE),
+    .by = variable) |>
+  a11y_table(
+    caption = "Table 2. Descriptive statistics for numeric variables",
+    digits = 2,
+    col.names = c("Variable", "N", "Mean", "Std. dev.", "Minimum", "Median", "Maximum"))
+```
+
+```{r Labor-force participation rate}
+lfp_rate <- raw |> summarise(rate = mean(inlf == 1)) |> pull(rate)
+```
+
+**Labor force participation rate:** `r percent(lfp_rate, accuracy = 0.1)`
+
+## Analytic sample
+
+```{r Create variables}
+df <- raw |>
+  mutate(
+    employed = as.integer(inlf == 1),
+    college = as.integer(educ >= 16),
+    log_wage = if_else(                               # `log_wage`: log wage for those in the labor force
+      inlf == 1 & lwage > 0,
+      lwage,
+      NA_real_
+    ),
+    exper2 = exper^2,                                 # quadratic experience term
+    educ_bin = cut(                                   # education categories
+      educ,
+      breaks = c(0, 8, 11, 12, 15, 21),
+      labels = c("<9", "9–11", "12", "13–15", "16+"),
+      right = TRUE))
+
+analytic <- df |> filter(!is.na(log_wage))
+
+analytic |>
+  summarise(n = n()) |>
+  a11y_table(
+    caption = "Table 3. Analytic sample size",
+    col.names = "Observations")
+```
+
+```{r Outlier detection}
+iqr_bounds <- analytic |>
+  summarise(
+    q1 = quantile(log_wage, 0.25),
+    q3 = quantile(log_wage, 0.75)
+  ) |>
+  mutate(lo = q1 - 3 * (q3 - q1), hi = q3 + 3 * (q3 - q1))
+
+n_outliers <- analytic |>
+  filter(
+    log_wage < iqr_bounds$lo |
+      log_wage > iqr_bounds$hi
+  ) |> nrow()
+
+tibble(outliers = n_outliers) |>
+  a11y_table(
+    caption = "Table 4. Log-wage outliers (beyond 3 × IQR from the quartiles)",
+    col.names = "Outliers")
+```
+
+`r if (n_outliers == 0) "No outliers detected." else paste(n_outliers, "outliers detected.")`
+
+## Figures
+
+```{r Visualize log-wage distribution by college status, fig.width=7, fig.height=5}
+educ_colors <- c("College (16+ yrs)" = orange, "No college" = blue)
+
+p1 <- analytic |>
+  mutate(
+    education = if_else(
+      college == 1, "College (16+ yrs)", "No college")) |>
+  ggplot(aes(x = log_wage, fill = education)) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    bins = 25,
+    alpha = 0.35,
+    position = "identity",
+    color = "white") +
+  geom_density(
+    aes(color = education, linetype = education),      # line type as well as color
+    linewidth = 0.9,
+    fill = NA) +
+  scale_fill_manual(values = educ_colors) +
+  scale_color_manual(values = educ_colors) +
+  scale_linetype_manual(
+    values = c("College (16+ yrs)" = "dashed", "No college" = "solid")) +
+  labs(
+    title = "Log wage distribution by education",
+    x = "Log wage",
+    y = "Density",
+    fill = NULL,
+    color = NULL,
+    linetype = NULL)
+```
+
+```{r Visualize experience vs. log wage, fig.width=7, fig.height=5}
+p2 <- analytic |>
+  ggplot(aes(x = exper, y = log_wage)) +
+  geom_point(
+    alpha = 0.45,
+    color = blue) +
+  geom_smooth(
+    method = "loess",
+    formula = y ~ x,
+    color = "black",
+    se = TRUE) +
+  labs(
+    title = "Experience vs. log wage (LOESS smoothing)",
+    x = "Years of experience",
+    y = "Log wage")
+```
+
+```{r Visualize education distribution, fig.width=7, fig.height=5}
+mean_educ <- mean(analytic$educ)
+
+p3 <- analytic |>
+  ggplot(aes(x = educ)) +
+  geom_histogram(
+    binwidth = 1,
+    fill = blue,
+    color = "white") +
+  geom_vline(
+    xintercept = mean_educ,
+    linetype = "dashed") +
+  annotate(
+    "text",
+    x = mean_educ + 0.3,
+    y = Inf,
+    vjust = 1.5,
+    hjust = 0,
+    label = sprintf("Mean = %.1f yrs", mean_educ)) +
+  scale_x_continuous(breaks = seq(4, 18, 2)) +
+  labs(
+    title = "Education distribution",
+    x = "Years of education",
+    y = "Count")
+```
+
+```{r Visualize mean log wage by education group, fig.width=7, fig.height=5}
+wage_by_educ <- analytic |>
+  group_by(educ_bin) |>
+  summarise(
+    n = n(),
+    mean_lwage = mean(log_wage),
+    .groups = "drop")
+
+p4 <- wage_by_educ |>
+  ggplot(aes(x = educ_bin, y = mean_lwage)) +
+  geom_col(
+    fill = blue,
+    width = 0.6) +
+  geom_text(
+    aes(label = sprintf("%.2f", mean_lwage)),
+    vjust = -0.6) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.12))) +
+  labs(
+    title = "Mean log wage by education group",
+    x = "Years of education",
+    y = "Mean log wage")
+```
+
+```{r Figure alt text}
+# Alt text for screen readers
+fig_alt <- paste(
+  "Four-panel figure.",
+  "Top left: density of log wage for women with and without a college degree; the college distribution sits to the right.",
+  "Top right: scatterplot of log wage against years of experience, with a LOESS curve that rises over the first 10 years or so and then flattens.",
+  "Bottom left: histogram of years of education, with a large spike at 12 years.",
+  "Bottom right: bar chart of mean log wage by education group; the values are given in Table 5.")
+```
+
+```{r Combined figure, fig.width=11, fig.height=8, fig.alt=fig_alt, fig.cap="Figure 1. Log wages, experience, and education in the analytic sample. The values behind the bottom-right panel are given in Table 5."}
+combined_plot <- (p1 + p2) / (p3 + p4) +
+  plot_annotation(
+    title = "Labor market outcomes based on Mroz (1987)",
+    subtitle = paste("Analytic sample:", comma(nrow(analytic)), "employed married women with positive wages"),
+    caption = "Data: Mroz (1987), Panel Study of Income Dynamics, via the {wooldridge} R package.",
+    theme = theme(plot.title = element_text(size = 16)))
+
+combined_plot
+```
+
+```{r Mean log wage by education group table}
+wage_by_educ |>
+  a11y_table(
+    caption = "Table 5. Mean log wage by education group",
+    col.names = c("Years of education", "Observations", "Mean log wage"))
+```
+
+## Regression results
+
+```{r OLS regression model using Mincer earnings equation}
+# Specify model
+ols <- lm(log_wage ~ educ + exper + exper2 + faminc, data = analytic)
+
+term_labels <- c(
+  "(Intercept)" = "Intercept",
+  educ = "Education (years)",
+  exper = "Experience (years)",
+  exper2 = "Experience squared",
+  faminc = "Family income ($)")
+
+sig4 <- function(x) formatC(x, digits = 4, format = "g")   # 4 significant digits; the `faminc` estimate is tiny
+
+# Robust coefficient table
+coeftest(ols, vcov = vcovHC(ols, type = "HC3")) |>
+  tidy() |>
+  mutate(
+    term = term_labels[term],
+    across(c(estimate, std.error), sig4),
+    p.value = pvalue(p.value)) |>
+  a11y_table(
+    caption = "Table 6. OLS estimates of log wage with heteroskedasticity-robust (HC3) standard errors",
+    align = "lrrrr",
+    col.names = c("Term", "Estimate", "Robust std. error", "t statistic", "p-value"))
+
+# Regression output
+tidy_ols <- tidy(ols, conf.int = TRUE)
+
+tidy_ols |>
+  mutate(
+    term = term_labels[term],
+    across(c(estimate, std.error, conf.low, conf.high), sig4),
+    p.value = pvalue(p.value)) |>
+  a11y_table(
+    caption = "Table 7. OLS estimates of log wage with conventional standard errors and 95% confidence intervals",
+    align = "lrrrrrr",
+    col.names = c("Term", "Estimate", "Std. error", "t statistic", "p-value", "95% CI lower", "95% CI upper"))
+
+# Model fit statistics
+glance(ols) |>
+  select(nobs, r.squared, adj.r.squared, sigma, statistic, p.value, df, df.residual, AIC, BIC) |>
+  mutate(p.value = pvalue(p.value)) |>
+  a11y_table(
+    caption = "Table 8. Model fit statistics",
+    align = "r",
+    col.names = c(
+      "Observations", "R-squared", "Adjusted R-squared", "Residual std. error", "F statistic",
+      "p-value", "Model df", "Residual df", "AIC", "BIC"))
+```
+
+OLS results suggest that education is positively associated with wages.
+
+```{r Interpretation}
+b <- coef(ols) ; peak_exp <- -b["exper"] / (2 * b["exper2"])
+
+tibble(
+  interpretation = c("Return to education (%)", "Peak experience (years)"),
+  value = c(round(b["educ"] * 100, 2),  round(peak_exp, 1))) |>
+  a11y_table(
+    caption = "Table 9. Interpretation of the OLS estimates",
+    digits = 2,
+    col.names = c("Quantity", "Value"))
+```

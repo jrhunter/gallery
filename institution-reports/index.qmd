@@ -1,0 +1,136 @@
+---
+title: "Student outcomes profiles"
+subtitle: "One automatically generated report per four-year institution, from public IPEDS data"
+format:
+  html:
+    theme: cosmo
+    code-fold: true
+    code-summary: "Show the SQL"
+    code-tools: true
+execute:
+  echo: false
+  warning: false
+jupyter: python3
+---
+
+```{python}
+#| tags: [parameters]
+state = "MD"
+```
+
+```{python}
+#| label: setup
+from pathlib import Path
+
+import altair as alt
+import duckdb
+from IPython.display import Markdown
+
+FOCUS, PEER, INK, MUTED, GRID = "#2a78d6", "#8a8984", "#0b0b0b", "#52514e", "#e6e5e1"
+
+con = duckdb.connect()
+con.execute(Path("sql/model.sql").read_text());
+```
+
+```{python}
+#| label: summary
+#| echo: true
+summary = con.execute("""
+    WITH latest AS (
+        SELECT unitid, value, base
+        FROM metrics
+        WHERE metric = 'grad_rate'
+          AND year = (SELECT max(year) FROM metrics WHERE metric = 'grad_rate')
+    )
+    SELECT
+        u.inst_name,
+        u.city,
+        u.control_label,
+        u.carnegie_label,
+        u.report_file,
+        own.value AS grad_rate,
+        own.base AS cohort,
+        median(peer.value) AS peer_median,
+        count(*) AS n_peers,
+        avg((peer.value < own.value)::INT) AS share_of_peers_below
+    FROM report_universe AS u
+    JOIN latest AS own USING (unitid)
+    JOIN peer_pairs AS p USING (unitid)
+    JOIN latest AS peer ON peer.unitid = p.peer_unitid
+    WHERE u.state_abbr = $state
+    GROUP BY ALL
+    ORDER BY grad_rate DESC
+""", {"state": state}).df()
+
+year = con.sql("SELECT max(year) FROM metrics WHERE metric = 'grad_rate'").fetchone()[0]
+
+Markdown(f"""
+Each of the **{len(summary)} institutions in {state}** below has its own report, rendered from a single
+parameterized Quarto template. Every report compares the institution with its national peers:
+other institutions with the same control and Carnegie classification. Click a name or a dot to
+open a report.
+""")
+```
+
+## Six-year graduation rate, `{python} str(year)`
+
+```{python}
+#| label: overview
+OWN, PEERS = "Institution", "Median of its national peers"
+order = summary.inst_name.tolist()
+y = alt.Y("inst_name:N", title=None, sort=order, axis=alt.Axis(labelLimit=300, labelColor=INK, labelFontSize=12, grid=False, domain=False, ticks=False))
+x_scale = alt.Scale(domain=[0, 1])
+base = alt.Chart(summary)
+
+link = base.mark_rule(color=PEER, strokeWidth=2, opacity=0.5).encode(
+    y=y,
+    x=alt.X("grad_rate:Q", title=None, scale=x_scale,
+            axis=alt.Axis(format=".0%", orient="top", values=[0, 0.2, 0.4, 0.6, 0.8, 1], gridColor=GRID, domain=False, ticks=False, labelColor=MUTED)),
+    x2="peer_median:Q",
+)
+dots = (
+    base.transform_fold(["grad_rate", "peer_median"], as_=["series", "x"])
+    .transform_calculate(series=f"datum.series == 'grad_rate' ? {OWN!r} : {PEERS!r}")
+    .mark_point(size=120, filled=True, opacity=1, stroke="white", strokeWidth=2)
+    .encode(
+        y=y, x=alt.X("x:Q", scale=x_scale),
+        color=alt.Color("series:N", scale=alt.Scale(domain=[OWN, PEERS], range=[FOCUS, PEER]),
+                        legend=alt.Legend(orient="top", title=None, labelColor=INK, labelFontSize=12, labelLimit=300)),
+        href="report_file:N",
+        tooltip=[
+            alt.Tooltip("inst_name:N", title="Institution"),
+            alt.Tooltip("carnegie_label:N", title="Peer group"),
+            alt.Tooltip("grad_rate:Q", title="Graduation rate", format=".1%"),
+            alt.Tooltip("peer_median:Q", title="Peer median", format=".1%"),
+            alt.Tooltip("n_peers:Q", title="Peers"),
+        ],
+    )
+)
+(link + dots).properties(width=380, height=alt.Step(24)).configure(
+    background="transparent", font="system-ui, -apple-system, 'Segoe UI', sans-serif"
+).configure_view(stroke=None)
+```
+
+## All reports
+
+```{python}
+#| label: table
+table = summary.assign(
+    Institution=[f"<a href='{f}'>{n}</a>" for f, n in zip(summary.report_file, summary.inst_name)],
+    City=summary.city,
+    Control=summary.control_label,
+    **{
+        "Peer group (Carnegie)": summary.carnegie_label,
+        "Cohort": summary.cohort.map("{:,.0f}".format),
+        "Graduation rate": summary.grad_rate.map("{:.0%}".format),
+        "Peer median": summary.peer_median.map("{:.0%}".format),
+        "Higher than": summary.share_of_peers_below.map("{:.0%} of peers".format),
+    },
+)[["Institution", "City", "Control", "Peer group (Carnegie)", "Cohort", "Graduation rate", "Peer median", "Higher than"]]
+table.style.hide(axis="index")
+```
+
+Source: IPEDS (National Center for Education Statistics) via the Urban Institute
+[Education Data Portal](https://educationdata.urban.org/documentation/colleges.html).
+Rates are for full-time, first-time, bachelor's-seeking students completing within six years.
+Institutions with a cohort under 30 or fewer than ten peers are not included.

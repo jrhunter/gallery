@@ -1,0 +1,429 @@
+---
+title: "NAEP scores in context"
+subtitle: "When are differences in state NAEP scores meaningful?"
+author: "James Robert Hunter"
+lang: en
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 2
+    code-fold: true
+    code-summary: "Show the R code"
+    code-tools: true
+    embed-resources: false
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{=html}
+<style>
+:root { --higher: #1c5cab; --lower: #c2501c; --same: #dddcd7; --ink: #0b0b0b; --muted: #52514e; --rule: #e6e5e1; }
+.controls { position: sticky; top: 0; z-index: 5; background: #fff; border-bottom: 1px solid var(--rule); padding: .6rem 0 .2rem; margin-bottom: 1rem; display: flex; flex-wrap: wrap; gap: .25rem 2rem; }
+.controls form { margin: 0 0 .4rem; width: auto; }
+.controls label { font-weight: 600; width: auto; margin-right: .5rem; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 1rem 0 1.25rem; }
+.tile { border: 1px solid var(--rule); border-radius: 8px; padding: 12px 14px; }
+.tile-label, .tile-detail { color: var(--muted); font-size: .85rem; }
+.tile-value { color: var(--ink); font-size: 1.9rem; font-weight: 600; line-height: 1.25; }
+.key { display: flex; flex-wrap: wrap; gap: .3rem 1.25rem; font-size: .85rem; color: var(--ink); margin: .5rem 0; }
+.key span.swatch { display: inline-block; width: 14px; height: 14px; border-radius: 3px; margin-right: .4rem; vertical-align: -2px; }
+.key span.ring { border: 2.5px solid var(--ink); background: #fff; }
+.note { color: var(--muted); font-size: .85rem; }
+</style>
+```
+
+Every NAEP release produces league tables of states. But NAEP tests a *sample* of
+students in each state, so every score carries sampling error, and many of the gaps
+between neighboring states in a ranking are too small to distinguish from chance.
+This page redraws the 2024 state results using the significance tests published by
+the National Center for Education Statistics (NCES), such that the magnitude of the
+differences is easy to spot.
+
+Select a jurisdiction, a subject, and grade:
+
+```{r}
+#| label: data
+#| echo: true
+library(dplyr)
+library(readr)
+
+estimates  <- read_csv("data/estimates.csv", show_col_types = FALSE)
+state_tests <- read_csv("data/state_comparisons.csv", show_col_types = FALSE)
+year_tests  <- read_csv("data/year_comparisons.csv", show_col_types = FALSE)
+latest <- max(estimates$year)
+
+# Ranking: A jurisdiction's raw rank orders the unrounded averages.
+# Its rank range counts only significant differences: it cannot rank
+# better than one place below everyone who scored significantly higher,
+# or worse than one place above everyone who scored significantly lower.
+standing <- state_tests |>
+  filter(focal != "NP", other != "NP") |>
+  summarize(
+    n_higher = sum(result == "lower"),    # others that scored higher than focal
+    n_same   = sum(result == "equal"),
+    n_lower  = sum(result == "higher"),
+    .by = c(subject, grade, focal)
+  ) |>
+  rename(code = focal) |>
+  inner_join(
+    estimates |> filter(year == latest, code != "NP") |> select(subject, grade, code, mean),
+    by = c("subject", "grade", "code")
+  ) |>
+  mutate(
+    n = n(),
+    raw_rank = min_rank(desc(mean)),
+    best_rank = 1 + n_higher,
+    worst_rank = n - n_lower,
+    .by = c(subject, grade)
+  )
+
+ojs_define(
+  estimates_cols = estimates, state_tests_cols = state_tests,
+  year_tests_cols = year_tests, standing_cols = standing, latest = latest
+)
+```
+
+```{ojs}
+est = transpose(estimates_cols)
+stateTests = transpose(state_tests_cols)
+yearTests = transpose(year_tests_cols)
+standing = transpose(standing_cols)
+
+HIGHER = "#1c5cab"
+LOWER = "#c2501c"
+SAME = "#dddcd7"
+INK = "#0b0b0b"
+MUTED = "#52514e"
+GRID = "#e6e5e1"
+NATION = "NP"
+W = 720
+
+jurisdictions = Array.from(d3.group(est.filter(d => d.code !== NATION), d => d.code), ([code, rows]) => ({code, jurisdiction: rows[0].jurisdiction}))
+  .sort((a, b) => d3.ascending(a.jurisdiction, b.jurisdiction))
+```
+
+::: {.controls}
+
+```{ojs}
+viewof focal = Inputs.select(jurisdictions, {label: "Jurisdiction", format: d => d.jurisdiction, value: jurisdictions.find(d => d.code === "MD")})
+viewof subject = Inputs.radio(["Mathematics", "Reading"], {label: "Subject", value: "Mathematics"})
+viewof grade = Inputs.radio([4, 8], {label: "Grade", value: 8, format: d => `Grade ${d}`})
+```
+
+:::
+
+```{ojs}
+// current selection 
+name = focal.jurisdiction
+cur = est.filter(d => d.subject === subject && d.grade === grade)
+now = cur.filter(d => d.year === latest)
+me = now.find(d => d.code === focal.code)
+nation = now.find(d => d.code === NATION)
+rank = standing.find(d => d.subject === subject && d.grade === grade && d.code === focal.code)
+tests = new Map(stateTests.filter(d => d.subject === subject && d.grade === grade && d.focal === focal.code).map(d => [d.other, d]))
+overTime = yearTests.filter(d => d.subject === subject && d.grade === grade)
+label = `grade ${grade} ${subject.toLowerCase()}`
+
+// small functions
+ordinal = n => n + (["th", "st", "nd", "rd"][(n % 100 >> 3 ^ 1) && n % 10] || "th")
+signed = x => (Math.round(x) > 0 ? "+" : Math.round(x) < 0 ? "−" : "") + Math.abs(Math.round(x))
+count = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`
+points = x => count(Math.abs(Math.round(x)), "point")
+textOn = fill => fill === SAME || fill === "#fff" ? INK : "#fff"
+
+// Tile-grid layout: one equal-sized tile per jurisdiction, so small states and
+// DC are as readable as large ones.
+tiles = new Map(Object.entries({
+  AK: [0, 0], ME: [0, 11],
+  VT: [1, 10], NH: [1, 11],
+  WA: [2, 1], ID: [2, 2], MT: [2, 3], ND: [2, 4], MN: [2, 5], IL: [2, 6], WI: [2, 7], MI: [2, 8], NY: [2, 9], RI: [2, 10], MA: [2, 11],
+  OR: [3, 1], NV: [3, 2], WY: [3, 3], SD: [3, 4], IA: [3, 5], IN: [3, 6], OH: [3, 7], PA: [3, 8], NJ: [3, 9], CT: [3, 10],
+  CA: [4, 1], UT: [4, 2], CO: [4, 3], NE: [4, 4], MO: [4, 5], KY: [4, 6], WV: [4, 7], VA: [4, 8], MD: [4, 9], DE: [4, 10],
+  AZ: [5, 2], NM: [5, 3], KS: [5, 4], AR: [5, 5], TN: [5, 6], NC: [5, 7], SC: [5, 8], DC: [5, 9],
+  OK: [6, 4], LA: [6, 5], MS: [6, 6], AL: [6, 7], GA: [6, 8],
+  HI: [7, 0], TX: [7, 4], FL: [7, 9], DS: [7, 11]
+}))
+
+// rows: [{code, fill, value, tip, focal}]
+tileMap = rows => Plot.plot({
+  width: W, height: 8 * 52, margin: 2,
+  x: {type: "band", domain: d3.range(12), axis: null, padding: 0.07},
+  y: {type: "band", domain: d3.range(8), axis: null, padding: 0.07},
+  marks: [
+    Plot.cell(rows, {x: d => tiles.get(d.code)[1], y: d => tiles.get(d.code)[0], fill: "fill", rx: 5,
+      stroke: d => d.focal ? INK : "none", strokeWidth: 2.5, title: "tip", tip: true}),
+    Plot.text(rows, {x: d => tiles.get(d.code)[1], y: d => tiles.get(d.code)[0], text: d => d.code === "DS" ? "DoD" : d.code,
+      dy: -7, fontSize: 12.5, fontWeight: 600, fill: d => textOn(d.fill), pointerEvents: "none"}),
+    Plot.text(rows, {x: d => tiles.get(d.code)[1], y: d => tiles.get(d.code)[0], text: "value",
+      dy: 9, fontSize: 11.5, fill: d => textOn(d.fill), pointerEvents: "none"})
+  ]
+})
+
+key = items => html`<div class="key">${items.map(([cls, style, text]) => html`<span><span class="swatch ${cls}" style="${style}"></span>${text}</span>`)}</div>`
+```
+
+## Where does it really stand?
+
+```{ojs}
+md`In ${latest}, **${name}**'s average ${label} score was **${Math.round(me.mean)}**. By raw score that is
+**${ordinal(rank.raw_rank)} of ${rank.n}** jurisdictions. But ${count(rank.n_same, "jurisdiction")} had
+${rank.n_same === 1 ? "a score" : "scores"} that NCES found *not significantly different* from ${name}'s.
+Only ${rank.n_higher} scored significantly higher and ${rank.n_lower} significantly lower. Counting only those
+differences, ${name} sits somewhere between **${ordinal(rank.best_rank)}** and **${ordinal(rank.worst_rank)}**.`
+```
+
+```{ojs}
+vsNation = tests.get(NATION)
+html`<div class="tiles">
+  <div class="tile"><div class="tile-label">Average score, ${latest}</div><div class="tile-value">${Math.round(me.mean)}</div>
+    <div class="tile-detail">National public ${Math.round(nation.mean)}: ${name} is ${vsNation.result === "equal" ? "not significantly different" : `significantly ${vsNation.result}`}</div></div>
+  <div class="tile"><div class="tile-label">Raw rank</div><div class="tile-value">${ordinal(rank.raw_rank)}</div>
+    <div class="tile-detail">of ${rank.n} jurisdictions</div></div>
+  <div class="tile"><div class="tile-label">Rank range</div><div class="tile-value">${rank.best_rank}–${rank.worst_rank}</div>
+    <div class="tile-detail">counting significant differences only</div></div>
+  <div class="tile"><div class="tile-label">Statistical ties</div><div class="tile-value">${rank.n_same}</div>
+    <div class="tile-detail">jurisdictions not significantly different</div></div>
+</div>`
+```
+
+### Every jurisdiction, compared with the selected one
+
+```{ojs}
+// result describes the focal jurisdiction relative to the other one, so a
+// "lower" result means the other jurisdiction scored higher.
+compared = now.filter(d => d.code !== NATION).map(d => {
+  const isFocal = d.code === focal.code
+  const t = tests.get(d.code)
+  const status = isFocal ? "focal" : !t ? "none" : t.result === "lower" ? "higher" : t.result === "higher" ? "lower" : "same"
+  const diff = d.mean - me.mean
+  const fill = {focal: "#fff", higher: HIGHER, lower: LOWER, same: SAME, none: "#f4f4f2"}[status]
+  const verdict = {focal: "Selected jurisdiction", higher: `Significantly higher than ${name}`, lower: `Significantly lower than ${name}`,
+    same: `Not significantly different from ${name}`, none: "No test available"}[status]
+  return {...d, focal: isFocal, status, diff, fill, verdict, value: isFocal ? Math.round(d.mean) : signed(diff),
+    tip: `${d.jurisdiction}\nAverage score ${Math.round(d.mean)}${isFocal ? "" : ` (${signed(diff)} vs ${name})`}\n${verdict}`}
+})
+
+key([
+  ["ring", "", `${name} (average score shown)`],
+  ["", `background:${HIGHER}`, "Scored significantly higher"],
+  ["", `background:${SAME}`, "Not significantly different"],
+  ["", `background:${LOWER}`, "Scored significantly lower"]
+])
+```
+
+```{ojs}
+tileMap(compared)
+```
+
+::: {.note}
+Numbers are each jurisdiction's average score minus the selected jurisdiction's, in scale points. DoD is the Department of Defense school system (DoDEA).
+:::
+
+### The ranking, with the ties marked
+
+```{ojs}
+ranked = d3.sort(compared, d => -d.mean)
+
+Plot.plot({
+  width: W, height: ranked.length * 17 + 50, marginLeft: 150, marginRight: 30, marginTop: 28,
+  x: {label: null, grid: true, nice: true, axis: "top"},
+  y: {label: null, domain: ranked.map(d => d.jurisdiction), tickSize: 0},
+  marks: [
+    Plot.ruleY([name], {stroke: "#eaf1fb", strokeWidth: 15}),
+    Plot.ruleX([nation.mean], {stroke: MUTED, strokeDasharray: "3,3"}),
+    Plot.text([nation], {x: "mean", frameAnchor: "bottom", dy: 14, text: d => `National public ${Math.round(d.mean)}`, fill: MUTED, fontSize: 11}),
+    Plot.dot(ranked, {x: "mean", y: "jurisdiction", r: 5.5, fill: "fill", stroke: d => d.focal ? INK : d.status === "same" ? "#8a8984" : "#fff",
+      strokeWidth: d => d.focal ? 2.5 : 1, title: "tip", tip: true})
+  ]
+})
+```
+
+::: {.note}
+Average scale score, 2024, highest first. Same colors as the map: gray dots are statistical ties with the selected jurisdiction, wherever they fall in the order.
+:::
+
+## Has it recovered since 2019?
+
+```{ojs}
+myTrend = cur.filter(d => d.code === focal.code)
+usTrend = cur.filter(d => d.code === NATION)
+myYearTests = new Map(overTime.filter(d => d.code === focal.code && d.stat === "mean").map(d => [d.earlier_year, d]))
+since19 = myYearTests.get(2019)
+since22 = myYearTests.get(2022)
+describe = t => !t ? "cannot be compared" : t.result === "equal" ? "not significantly different" : `significantly ${t.result} (${signed(t.gap)} points)`
+
+md`Compared with 2019, the last assessment before the pandemic, ${name}'s ${latest} score is **${describe(since19)}**.
+Compared with 2022 it is **${describe(since22)}**.`
+```
+
+```{ojs}
+key([
+  ["", `background:${HIGHER}; border-radius:50%`, `${name}: significantly different from ${latest}`],
+  ["", `background:#fff; border:2.5px solid ${HIGHER}; border-radius:50%`, `${name}: not significantly different from ${latest}`],
+  ["", `background:#8a8984; height:3px; vertical-align:4px`, "National public"]
+])
+```
+
+```{ojs}
+Plot.plot({
+  width: W, height: 320, marginLeft: 46, marginRight: 20,
+  x: {label: null, ticks: usTrend.map(d => d.year), tickFormat: "d"},
+  y: {label: "Average scale score", grid: true, nice: true},
+  marks: [
+    Plot.lineY(usTrend, {x: "year", y: "mean", stroke: "#8a8984", strokeWidth: 2}),
+    Plot.lineY(myTrend, {x: "year", y: "mean", stroke: HIGHER, strokeWidth: 2.5}),
+    Plot.dot(myTrend, {x: "year", y: "mean", r: 5, stroke: HIGHER, strokeWidth: 2.5,
+      fill: d => d.year === latest || myYearTests.get(d.year)?.result !== "equal" ? HIGHER : "#fff"}),
+    Plot.ruleX(usTrend, Plot.pointerX({x: "year", stroke: MUTED, strokeOpacity: 0.5})),
+    Plot.tip(myTrend, Plot.pointerX({x: "year", y: "mean", title: d => {
+      const t = myYearTests.get(d.year), us = usTrend.find(u => u.year === d.year)
+      return `${d.year}\n${name}: ${Math.round(d.mean)}\nNational public: ${us ? Math.round(us.mean) : "n/a"}` +
+        (d.year === latest ? "" : `\n${latest} is ${describe(t)} relative to ${d.year}`)
+    }}))
+  ]
+})
+```
+
+### The same test in every jurisdiction
+
+```{ojs}
+change = now.map(d => {
+  const t = overTime.find(t => t.code === d.code && t.stat === "mean" && t.earlier_year === 2019)
+  const status = !t ? "none" : t.result
+  const fill = {lower: LOWER, higher: HIGHER, equal: SAME, none: "#f4f4f2"}[status]
+  const verdict = {lower: "Significantly lower than in 2019", higher: "Significantly higher than in 2019",
+    equal: "Not significantly different from 2019", none: "No test available"}[status]
+  return {...d, status, fill, focal: d.code === focal.code, value: t ? signed(t.gap) : "",
+    tip: `${d.jurisdiction}\n${latest} score ${Math.round(d.mean)}${t ? ` (${signed(t.gap)} since 2019)` : ""}\n${verdict}`}
+})
+changeStates = change.filter(d => d.code !== NATION)
+tally = d3.rollup(changeStates, v => v.length, d => d.status)
+
+md`Across the ${changeStates.length} jurisdictions, **${tally.get("lower") ?? 0}** scored significantly lower in ${latest} than in 2019,
+**${tally.get("equal") ?? 0}** were not significantly different, and **${tally.get("higher") ?? 0}** scored significantly higher.`
+```
+
+```{ojs}
+key([
+  ["", `background:${LOWER}`, "Significantly lower than 2019"],
+  ["", `background:${SAME}`, "Not significantly different"],
+  ["", `background:${HIGHER}`, "Significantly higher than 2019"],
+  ["ring", "", name]
+])
+```
+
+```{ojs}
+tileMap(changeStates)
+```
+
+::: {.note}
+Numbers are the change in average score from 2019 to 2024, in scale points.
+:::
+
+## Who lost ground?
+
+An average can hide a widening spread. NAEP also reports the scores at the 10th, 25th,
+50th, 75th, and 90th percentiles, which show whether lower- and higher-performing
+students moved together.
+
+```{ojs}
+PCT = [["p90", "90th percentile"], ["p75", "75th"], ["p50", "50th (median)"], ["p25", "25th"], ["p10", "10th percentile"]]
+pctChange = [focal.code, NATION].flatMap(code => PCT.map(([stat, lab]) => {
+  const t = overTime.find(t => t.code === code && t.stat === stat && t.earlier_year === 2019)
+  return t && {who: code === NATION ? "National public" : name, isFocal: code !== NATION, stat, lab, gap: t.gap, sig: t.result !== "equal"}
+})).filter(d => d)
+mine = new Map(pctChange.filter(d => d.isFocal).map(d => [d.stat, d]))
+lo = mine.get("p10")
+hi = mine.get("p90")
+say = d => `${d.gap < 0 ? "fell" : "rose"} ${points(d.gap)}${d.sig ? "" : " (not a significant change)"}`
+
+lo && hi
+  ? md`In ${name}, the score at the **10th percentile ${say(lo)}** between 2019 and ${latest}, and the score at the
+**90th percentile ${say(hi)}**. ${Math.round(lo.gap) < Math.round(hi.gap) ? "Lower-performing students lost more ground than higher-performing students." : Math.round(lo.gap) > Math.round(hi.gap) ? "Higher-performing students lost more ground, or gained less, than lower-performing students." : "The two ends of the distribution moved by the same amount."}`
+  : md`Percentile comparisons are not available for this selection.`
+```
+
+```{ojs}
+key([
+  ["", `background:${HIGHER}; border-radius:50%`, `${name}: significant change`],
+  ["", `background:#fff; border:2.5px solid ${HIGHER}; border-radius:50%`, `${name}: not significant`],
+  ["", `background:#8a8984; border-radius:50%`, "National public: significant change"],
+  ["", `background:#fff; border:2.5px solid #8a8984; border-radius:50%`, "National public: not significant"]
+])
+```
+
+```{ojs}
+Plot.plot({
+  width: W, height: 320, marginLeft: 120, marginRight: 30, marginBottom: 46,
+  x: {label: `Change in score, 2019 to ${latest} (scale points)`, labelOffset: 40, grid: true, nice: true},
+  y: {label: null, domain: PCT.map(d => d[1]), tickSize: 0},
+  fy: {label: null},
+  marks: [
+    Plot.ruleX([0], {stroke: INK}),
+    ...[true, false].map(isFocal => Plot.dot(pctChange.filter(d => d.isFocal === isFocal), {x: "gap", y: "lab", r: 6, strokeWidth: 2.5,
+      dy: isFocal ? -7 : 7,
+      stroke: isFocal ? HIGHER : "#8a8984",
+      fill: d => !d.sig ? "#fff" : isFocal ? HIGHER : "#8a8984",
+      title: d => `${d.who}\n${d.lab}: ${signed(d.gap)} points\n${d.sig ? "Significant change" : "Not a significant change"}`, tip: true}))
+  ]
+})
+```
+
+### The whole distribution since 2003
+
+```{ojs}
+fan = myTrend.flatMap(d => PCT.map(([stat, lab]) => ({year: d.year, stat, lab: lab.replace(" percentile", "").replace(" (median)", ""), score: d[stat]}))).filter(d => d.score != null)
+
+Plot.plot({
+  width: W, height: 340, marginLeft: 46, marginRight: 48,
+  x: {label: null, ticks: usTrend.map(d => d.year), tickFormat: "d"},
+  y: {label: `${name}: score at each percentile`, grid: true, nice: true},
+  marks: [
+    Plot.lineY(fan, {x: "year", y: "score", z: "stat", stroke: HIGHER, strokeWidth: d => d.stat === "p50" ? 2.5 : 1.5}),
+    Plot.text(fan, Plot.selectLast({x: "year", y: "score", z: "stat", text: "lab", textAnchor: "start", dx: 6, fill: INK, fontSize: 11})),
+    Plot.dot(fan, Plot.pointer({x: "year", y: "score", r: 4, fill: HIGHER, stroke: "#fff",
+      title: d => `${d.year}\n${d.lab} percentile: ${Math.round(d.score)}`, tip: true}))
+  ]
+})
+```
+
+## The comparison as a table
+
+```{ojs}
+Inputs.table(ranked.map((d, i) => ({
+  "Raw rank": i + 1,
+  Jurisdiction: d.jurisdiction,
+  "Average score": Math.round(d.mean),
+  [`Difference from ${name}`]: d.focal ? "" : signed(d.diff),
+  "NCES test": d.verdict
+})), {rows: 14, layout: "auto"})
+```
+
+## Data and method
+
+**Source.** National Assessment of Educational Progress (NAEP), mathematics and reading,
+grades 4 and 8, 2003 to 2024, public schools. Estimates and significance tests come from the
+[NAEP Data Service API](https://www.nationsreportcard.gov/api_endpoint.aspx) of the National
+Center for Education Statistics. `scripts/fetch_naep.R` rebuilds the data files.
+
+**Significance tests.** Every "significantly higher", "lower", or "not significantly different"
+on this page is NCES's own determination, as returned by the API. Nothing is re-estimated here.
+The API does not publish standard errors, so this page shows no confidence intervals and does not
+approximate any. "Not significantly different" means the data cannot distinguish the two scores.
+It does not mean they are equal.
+
+**Rank range.** The raw rank orders the unrounded average scores of the 52 jurisdictions (50
+states, the District of Columbia, and DoDEA). The rank range is derived here from NCES's pairwise
+tests: the best rank is one more than the number of jurisdictions that scored significantly
+higher, and the worst rank is 52 minus the number that scored significantly lower. It is a
+summary of the pairwise results, not a formal confidence interval for the rank.
+
+**Limits.**
+
+- Each test is a single pairwise comparison.
+- "Not significantly different" is not transitive: A can tie with B, and B with C, while A and C differ.
+- Scores are shown rounded to whole points, as NAEP reports them. Ranks and tests use unrounded values.
+- Statistical significance is not educational significance. A small difference can be significant in a large state.

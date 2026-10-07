@@ -1,0 +1,6 @@
+.venv/
+_shots/
+*.quarto_ipynb
+/report_files/
+/index_files/
+/*.html

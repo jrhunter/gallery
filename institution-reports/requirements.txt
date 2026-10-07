@@ -1,0 +1,5 @@
+duckdb>=1.1
+pandas>=2.1
+altair>=5.5
+jupyter
+papermill

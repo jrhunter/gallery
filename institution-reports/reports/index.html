@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Student outcomes profiles</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="index_files/libs/clipboard/clipboard.min.js"></script>
+<script src="index_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="index_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="index_files/libs/quarto-html/popper.min.js"></script>
+<script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="index_files/libs/quarto-html/anchor.min.js"></script>
+<link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="index_files/libs/bootstrap/bootstrap-ea062d43db4123c4fb0990521c062cc2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Student outcomes profiles</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+<p class="subtitle lead">One automatically generated report per four-year institution, from public IPEDS data</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="cell-summary" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Show the SQL</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>summary <span class="op">=</span> con.execute(<span class="st">"""</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="st">    WITH latest AS (</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="st">        SELECT unitid, value, base</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="st">        FROM metrics</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="st">        WHERE metric = 'grad_rate'</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="st">          AND year = (SELECT max(year) FROM metrics WHERE metric = 'grad_rate')</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="st">    )</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="st">        u.inst_name,</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="st">        u.city,</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="st">        u.control_label,</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="st">        u.carnegie_label,</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="st">        u.report_file,</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="st">        own.value AS grad_rate,</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="st">        own.base AS cohort,</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="st">        median(peer.value) AS peer_median,</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="st">        count(*) AS n_peers,</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="st">        avg((peer.value &lt; own.value)::INT) AS share_of_peers_below</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM report_universe AS u</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="st">    JOIN latest AS own USING (unitid)</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="st">    JOIN peer_pairs AS p USING (unitid)</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="st">    JOIN latest AS peer ON peer.unitid = p.peer_unitid</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="st">    WHERE u.state_abbr = $state</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="st">    GROUP BY ALL</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="st">    ORDER BY grad_rate DESC</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>, {<span class="st">"state"</span>: state}).df()</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>year <span class="op">=</span> con.sql(<span class="st">"SELECT max(year) FROM metrics WHERE metric = 'grad_rate'"</span>).fetchone()[<span class="dv">0</span>]</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>Markdown(<span class="ss">f"""</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="ss">Each of the **</span><span class="sc">{</span><span class="bu">len</span>(summary)<span class="sc">}</span><span class="ss"> institutions in </span><span class="sc">{</span>state<span class="sc">}</span><span class="ss">** below has its own report, rendered from a single</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="ss">parameterized Quarto template. Every report compares the institution with its national peers:</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="ss">other institutions with the same control and Carnegie classification. Click a name or a dot to</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="ss">open a report.</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="summary" class="cell-output cell-output-display cell-output-markdown" data-execution_count="4">
+<p>Each of the <strong>27 institutions in MD</strong> below has its own report, rendered from a single parameterized Quarto template. Every report compares the institution with its national peers: other institutions with the same control and Carnegie classification. Click a name or a dot to open a report.</p>
+</div>
+</div>
+<section id="six-year-graduation-rate-2023" class="level2">
+<h2 class="anchored" data-anchor-id="six-year-graduation-rate-2023">Six-year graduation rate, 2023</h2>
+<div id="cell-overview" class="cell" data-execution_count="5">
+<div id="overview" class="cell-output cell-output-display" data-execution_count="5">
+
+<style>
+  #altair-viz-ba83e356830844c49cacfc92a77f9212.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-ba83e356830844c49cacfc92a77f9212.vega-embed details,
+  #altair-viz-ba83e356830844c49cacfc92a77f9212.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-ba83e356830844c49cacfc92a77f9212"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-ba83e356830844c49cacfc92a77f9212") {
+      outputDiv = document.getElementById("altair-viz-ba83e356830844c49cacfc92a77f9212");
+    }
+
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@6?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@6.4.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@7?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      let deps = ["vega-embed"];
+      require(deps, displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "6")
+        .then(() => maybeLoadScript("vega-lite", "6.4.1"))
+        .then(() => maybeLoadScript("vega-embed", "7"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300, "stroke": null}, "background": "transparent", "font": "system-ui, -apple-system, 'Segoe UI', sans-serif"}, "layer": [{"mark": {"type": "rule", "color": "#8a8984", "opacity": 0.5, "strokeWidth": 2}, "encoding": {"x": {"axis": {"domain": false, "format": ".0%", "gridColor": "#e6e5e1", "labelColor": "#52514e", "orient": "top", "ticks": false, "values": [0, 0.2, 0.4, 0.6, 0.8, 1]}, "field": "grad_rate", "scale": {"domain": [0, 1]}, "title": null, "type": "quantitative"}, "x2": {"field": "peer_median"}, "y": {"axis": {"domain": false, "grid": false, "labelColor": "#0b0b0b", "labelFontSize": 12, "labelLimit": 300, "ticks": false}, "field": "inst_name", "sort": ["Johns Hopkins University", "United States Naval Academy", "University of Maryland-College Park", "Loyola University Maryland", "Maryland Institute College of Art", "St. John's College", "University of Maryland-Baltimore County", "St. Mary's College of Maryland", "Towson University", "Stevenson University", "Salisbury University", "Mount St. Mary's University", "Washington College", "McDaniel College", "Goucher College", "Hood College", "Notre Dame of Maryland University", "Frostburg State University", "Capitol Technology University", "Morgan State University", "Bowie State University", "University of Baltimore", "University of Maryland Eastern Shore", "Washington Adventist University", "University of Maryland Global Campus", "Coppin State University", "Ner Israel Rabbinical College"], "title": null, "type": "nominal"}}}, {"mark": {"type": "point", "filled": true, "opacity": 1, "size": 120, "stroke": "white", "strokeWidth": 2}, "encoding": {"color": {"field": "series", "legend": {"labelColor": "#0b0b0b", "labelFontSize": 12, "labelLimit": 300, "orient": "top", "title": null}, "scale": {"domain": ["Institution", "Median of its national peers"], "range": ["#2a78d6", "#8a8984"]}, "type": "nominal"}, "href": {"field": "report_file", "type": "nominal"}, "tooltip": [{"field": "inst_name", "title": "Institution", "type": "nominal"}, {"field": "carnegie_label", "title": "Peer group", "type": "nominal"}, {"field": "grad_rate", "format": ".1%", "title": "Graduation rate", "type": "quantitative"}, {"field": "peer_median", "format": ".1%", "title": "Peer median", "type": "quantitative"}, {"field": "n_peers", "title": "Peers", "type": "quantitative"}], "x": {"field": "x", "scale": {"domain": [0, 1]}, "type": "quantitative"}, "y": {"axis": {"domain": false, "grid": false, "labelColor": "#0b0b0b", "labelFontSize": 12, "labelLimit": 300, "ticks": false}, "field": "inst_name", "sort": ["Johns Hopkins University", "United States Naval Academy", "University of Maryland-College Park", "Loyola University Maryland", "Maryland Institute College of Art", "St. John's College", "University of Maryland-Baltimore County", "St. Mary's College of Maryland", "Towson University", "Stevenson University", "Salisbury University", "Mount St. Mary's University", "Washington College", "McDaniel College", "Goucher College", "Hood College", "Notre Dame of Maryland University", "Frostburg State University", "Capitol Technology University", "Morgan State University", "Bowie State University", "University of Baltimore", "University of Maryland Eastern Shore", "Washington Adventist University", "University of Maryland Global Campus", "Coppin State University", "Ner Israel Rabbinical College"], "title": null, "type": "nominal"}}, "transform": [{"fold": ["grad_rate", "peer_median"], "as": ["series", "x"]}, {"calculate": "datum.series == 'grad_rate' ? 'Institution' : 'Median of its national peers'", "as": "series"}]}], "data": {"name": "data-30c2e3cb5d19925b12e521aae0071523"}, "height": {"step": 24}, "width": 380, "$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "datasets": {"data-30c2e3cb5d19925b12e521aae0071523": [{"inst_name": "Johns Hopkins University", "city": "Baltimore", "control_label": "Private nonprofit", "carnegie_label": "Doctoral: Very High Research Activity", "report_file": "162928-johns-hopkins-university.html", "grad_rate": 0.937809187279152, "cohort": 1415, "peer_median": 0.9358524861342445, "n_peers": 38, "share_of_peers_below": 0.5263157894736842}, {"inst_name": "United States Naval Academy", "city": "Annapolis", "control_label": "Public", "carnegie_label": "Baccalaureate: Arts & Sciences", "report_file": "164155-united-states-naval-academy.html", "grad_rate": 0.9294117647058824, "cohort": 1190, "peer_median": 0.572327763790341, "n_peers": 16, "share_of_peers_below": 1.0}, {"inst_name": "University of Maryland-College Park", "city": "College Park", "control_label": "Public", "carnegie_label": "Doctoral: Very High Research Activity", "report_file": "163286-university-of-maryland-college-park.html", "grad_rate": 0.8868175765645806, "cohort": 6008, "peer_median": 0.7364430517544168, "n_peers": 104, "share_of_peers_below": 0.9038461538461539}, {"inst_name": "Loyola University Maryland", "city": "Baltimore", "control_label": "Private nonprofit", "carnegie_label": "Master's: Larger Programs", "report_file": "163046-loyola-university-maryland.html", "grad_rate": 0.7919400187441424, "cohort": 1067, "peer_median": 0.6020710059171598, "n_peers": 141, "share_of_peers_below": 0.9574468085106383}, {"inst_name": "Maryland Institute College of Art", "city": "Baltimore", "control_label": "Private nonprofit", "carnegie_label": "Special Focus: Arts, Music & Design", "report_file": "163295-maryland-institute-college-of-art.html", "grad_rate": 0.7223529411764706, "cohort": 425, "peer_median": 0.6065644194208832, "n_peers": 26, "share_of_peers_below": 0.8076923076923077}, {"inst_name": "St. John's College", "city": "Annapolis", "control_label": "Private nonprofit", "carnegie_label": "Baccalaureate: Arts & Sciences", "report_file": "163976-st-john-s-college.html", "grad_rate": 0.7142857142857143, "cohort": 119, "peer_median": 0.710858825764773, "n_peers": 184, "share_of_peers_below": 0.5217391304347826}, {"inst_name": "University of Maryland-Baltimore County", "city": "Baltimore", "control_label": "Public", "carnegie_label": "Doctoral: Very High Research Activity", "report_file": "163268-university-of-maryland-baltimore-county.html", "grad_rate": 0.7000562746201463, "cohort": 1777, "peer_median": 0.7405360469617208, "n_peers": 104, "share_of_peers_below": 0.41346153846153844}, {"inst_name": "St. Mary's College of Maryland", "city": "St. Mary's City", "control_label": "Public", "carnegie_label": "Baccalaureate: Arts & Sciences", "report_file": "163912-st-mary-s-college-of-maryland.html", "grad_rate": 0.699468085106383, "cohort": 376, "peer_median": 0.572327763790341, "n_peers": 16, "share_of_peers_below": 0.8125}, {"inst_name": "Towson University", "city": "Towson", "control_label": "Public", "carnegie_label": "Master's: Larger Programs", "report_file": "164076-towson-university.html", "grad_rate": 0.6945746818486269, "cohort": 2986, "peer_median": 0.4986412371700376, "n_peers": 140, "share_of_peers_below": 0.95}, {"inst_name": "Stevenson University", "city": "Owings Mills", "control_label": "Private nonprofit", "carnegie_label": "Master's: Larger Programs", "report_file": "164173-stevenson-university.html", "grad_rate": 0.6849087893864013, "cohort": 603, "peer_median": 0.6020710059171598, "n_peers": 141, "share_of_peers_below": 0.75177304964539}, {"inst_name": "Salisbury University", "city": "Salisbury", "control_label": "Public", "carnegie_label": "Master's: Larger Programs", "report_file": "163851-salisbury-university.html", "grad_rate": 0.6814641744548287, "cohort": 1284, "peer_median": 0.4986412371700376, "n_peers": 140, "share_of_peers_below": 0.9285714285714286}, {"inst_name": "Mount St. Mary's University", "city": "Emmitsburg", "control_label": "Private nonprofit", "carnegie_label": "Master's: Medium Programs", "report_file": "163462-mount-st-mary-s-university.html", "grad_rate": 0.6539162112932605, "cohort": 549, "peer_median": 0.5605381165919282, "n_peers": 103, "share_of_peers_below": 0.7378640776699029}, {"inst_name": "Washington College", "city": "Chestertown", "control_label": "Private nonprofit", "carnegie_label": "Baccalaureate: Arts & Sciences", "report_file": "164216-washington-college.html", "grad_rate": 0.6537216828478964, "cohort": 309, "peer_median": 0.7116562739306422, "n_peers": 184, "share_of_peers_below": 0.3695652173913043}, {"inst_name": "McDaniel College", "city": "Westminster", "control_label": "Private nonprofit", "carnegie_label": "Master's: Larger Programs", "report_file": "164270-mcdaniel-college.html", "grad_rate": 0.6328502415458938, "cohort": 414, "peer_median": 0.6020710059171598, "n_peers": 141, "share_of_peers_below": 0.5957446808510638}, {"inst_name": "Goucher College", "city": "Baltimore", "control_label": "Private nonprofit", "carnegie_label": "Baccalaureate: Arts & Sciences", "report_file": "162654-goucher-college.html", "grad_rate": 0.5734265734265734, "cohort": 429, "peer_median": 0.7116562739306422, "n_peers": 184, "share_of_peers_below": 0.2554347826086957}, {"inst_name": "Hood College", "city": "Frederick", "control_label": "Private nonprofit", "carnegie_label": "Master's: Larger Programs", "report_file": "162760-hood-college.html", "grad_rate": 0.5690376569037657, "cohort": 239, "peer_median": 0.6027397260273972, "n_peers": 141, "share_of_peers_below": 0.425531914893617}, {"inst_name": "Notre Dame of Maryland University", "city": "Baltimore", "control_label": "Private nonprofit", "carnegie_label": "Master's: Larger Programs", "report_file": "163578-notre-dame-of-maryland-university.html", "grad_rate": 0.5, "cohort": 224, "peer_median": 0.6027397260273972, "n_peers": 141, "share_of_peers_below": 0.2765957446808511}, {"inst_name": "Frostburg State University", "city": "Frostburg", "control_label": "Public", "carnegie_label": "Master's: Larger Programs", "report_file": "162584-frostburg-state-university.html", "grad_rate": 0.4965986394557823, "cohort": 735, "peer_median": 0.5027810813556688, "n_peers": 140, "share_of_peers_below": 0.4785714285714286}, {"inst_name": "Capitol Technology University", "city": "Laurel", "control_label": "Private nonprofit", "carnegie_label": "Doctoral/Professional", "report_file": "162061-capitol-technology-university.html", "grad_rate": 0.43209876543209874, "cohort": 81, "peer_median": 0.6068515497553018, "n_peers": 131, "share_of_peers_below": 0.06870229007633588}, {"inst_name": "Morgan State University", "city": "Baltimore", "control_label": "Public", "carnegie_label": "Doctoral: High Research Activity", "report_file": "163453-morgan-state-university.html", "grad_rate": 0.40874811463046756, "cohort": 1326, "peer_median": 0.5588094061345814, "n_peers": 90, "share_of_peers_below": 0.07777777777777778}, {"inst_name": "Bowie State University", "city": "Bowie", "control_label": "Public", "carnegie_label": "Master's: Larger Programs", "report_file": "162007-bowie-state-university.html", "grad_rate": 0.3819599109131403, "cohort": 898, "peer_median": 0.5027810813556688, "n_peers": 140, "share_of_peers_below": 0.16428571428571428}, {"inst_name": "University of Baltimore", "city": "Baltimore", "control_label": "Public", "carnegie_label": "Master's: Larger Programs", "report_file": "161873-university-of-baltimore.html", "grad_rate": 0.3815789473684211, "cohort": 76, "peer_median": 0.5027810813556688, "n_peers": 140, "share_of_peers_below": 0.15714285714285714}, {"inst_name": "University of Maryland Eastern Shore", "city": "Princess Anne", "control_label": "Public", "carnegie_label": "Doctoral: High Research Activity", "report_file": "163338-university-of-maryland-eastern-shore.html", "grad_rate": 0.3532934131736527, "cohort": 501, "peer_median": 0.5588094061345814, "n_peers": 90, "share_of_peers_below": 0.03333333333333333}, {"inst_name": "Washington Adventist University", "city": "Takoma Park", "control_label": "Private nonprofit", "carnegie_label": "Master's: Small Programs", "report_file": "162210-washington-adventist-university.html", "grad_rate": 0.28402366863905326, "cohort": 169, "peer_median": 0.521738001995582, "n_peers": 88, "share_of_peers_below": 0.045454545454545456}, {"inst_name": "University of Maryland Global Campus", "city": "Adelphi", "control_label": "Public", "carnegie_label": "Master's: Larger Programs", "report_file": "163204-university-of-maryland-global-campus.html", "grad_rate": 0.2803030303030303, "cohort": 132, "peer_median": 0.5027810813556688, "n_peers": 140, "share_of_peers_below": 0.04285714285714286}, {"inst_name": "Coppin State University", "city": "Baltimore", "control_label": "Public", "carnegie_label": "Master's: Small Programs", "report_file": "162283-coppin-state-university.html", "grad_rate": 0.2622107969151671, "cohort": 389, "peer_median": 0.444300031508277, "n_peers": 34, "share_of_peers_below": 0.0}, {"inst_name": "Ner Israel Rabbinical College", "city": "Baltimore", "control_label": "Private nonprofit", "carnegie_label": "Special Focus: Faith-Related", "report_file": "163532-ner-israel-rabbinical-college.html", "grad_rate": 0.23529411764705882, "cohort": 34, "peer_median": 0.45871040723981904, "n_peers": 38, "share_of_peers_below": 0.2631578947368421}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+</section>
+<section id="all-reports" class="level2">
+<h2 class="anchored" data-anchor-id="all-reports">All reports</h2>
+<div id="cell-table" class="cell" data-execution_count="6">
+<div id="table" class="cell-output cell-output-display" data-execution_count="6">
+<style type="text/css">
+</style>
+
+<table id="T_c64c6" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_c64c6_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Institution</th>
+<th id="T_c64c6_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">City</th>
+<th id="T_c64c6_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Control</th>
+<th id="T_c64c6_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Peer group (Carnegie)</th>
+<th id="T_c64c6_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">Cohort</th>
+<th id="T_c64c6_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">Graduation rate</th>
+<th id="T_c64c6_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">Peer median</th>
+<th id="T_c64c6_level0_col7" class="col_heading level0 col7" data-quarto-table-cell-role="th">Higher than</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_c64c6_row0_col0" class="data row0 col0"><a href="162928-johns-hopkins-university.html">Johns Hopkins University</a></td>
+<td id="T_c64c6_row0_col1" class="data row0 col1">Baltimore</td>
+<td id="T_c64c6_row0_col2" class="data row0 col2">Private nonprofit</td>
+<td id="T_c64c6_row0_col3" class="data row0 col3">Doctoral: Very High Research Activity</td>
+<td id="T_c64c6_row0_col4" class="data row0 col4">1,415</td>
+<td id="T_c64c6_row0_col5" class="data row0 col5">94%</td>
+<td id="T_c64c6_row0_col6" class="data row0 col6">94%</td>
+<td id="T_c64c6_row0_col7" class="data row0 col7">53% of peers</td>
+</tr>
+<tr class="even">
+<td id="T_c64c6_row1_col0" class="data row1 col0"><a href="164155-united-states-naval-academy.html">United States Naval Academy</a></td>
+<td id="T_c64c6_row1_col1" class="data row1 col1">Annapolis</td>
+<td id="T_c64c6_row1_col2" class="data row1 col2">Public</td>
+<td id="T_c64c6_row1_col3" class="data row1 col3">Baccalaureate: Arts &amp; Sciences</td>
+<td id="T_c64c6_row1_col4" class="data row1 col4">1,190</td>
+<td id="T_c64c6_row1_col5" class="data row1 col5">93%</td>
+<td id="T_c64c6_row1_col6" class="data row1 col6">57%</td>
+<td id="T_c64c6_row1_col7" class="data row1 col7">100% of peers</td>
+</tr>
+<tr class="odd">
+<td id="T_c64c6_row2_col0" class="data row2 col0"><a href="163286-university-of-maryland-college-park.html">University of Maryland-College Park</a></td>
+<td id="T_c64c6_row2_col1" class="data row2 col1">College Park</td>
+<td id="T_c64c6_row2_col2" class="data row2 col2">Public</td>
+<td id="T_c64c6_row2_col3" class="data row2 col3">Doctoral: Very High Research Activity</td>
+<td id="T_c64c6_row2_col4" class="data row2 col4">6,008</td>
+<td id="T_c64c6_row2_col5" class="data row2 col5">89%</td>
+<td id="T_c64c6_row2_col6" class="data row2 col6">74%</td>
+<td id="T_c64c6_row2_col7" class="data row2 col7">90% of peers</td>
+</tr>
+<tr class="even">
+<td id="T_c64c6_row3_col0" class="data row3 col0"><a href="163046-loyola-university-maryland.html">Loyola University Maryland</a></td>
+<td id="T_c64c6_row3_col1" class="data row3 col1">Baltimore</td>
+<td id="T_c64c6_row3_col2" class="data row3 col2">Private nonprofit</td>
+<td id="T_c64c6_row3_col3" class="data row3 col3">Master's: Larger Programs</td>
+<td id="T_c64c6_row3_col4" class="data row3 col4">1,067</td>
+<td id="T_c64c6_row3_col5" class="data row3 col5">79%</td>
+<td id="T_c64c6_row3_col6" class="data row3 col6">60%</td>
+<td id="T_c64c6_row3_col7" class="data row3 col7">96% of peers</td>
+</tr>
+<tr class="odd">
+<td id="T_c64c6_row4_col0" class="data row4 col0"><a href="163295-maryland-institute-college-of-art.html">Maryland Institute College of Art</a></td>
+<td id="T_c64c6_row4_col1" class="data row4 col1">Baltimore</td>
+<td id="T_c64c6_row4_col2" class="data row4 col2">Private nonprofit</td>
+<td id="T_c64c6_row4_col3" class="data row4 col3">Special Focus: Arts, Music &amp; Design</td>
+<td id="T_c64c6_row4_col4" class="data row4 col4">425</td>
+<td id="T_c64c6_row4_col5" class="data row4 col5">72%</td>
+<td id="T_c64c6_row4_col6" class="data row4 col6">61%</td>
+<td id="T_c64c6_row4_col7" class="data row4 col7">81% of peers</td>
+</tr>
+<tr class="even">
+<td id="T_c64c6_row5_col0" class="data row5 col0"><a href="163976-st-john-s-college.html">St. John's College</a></td>
+<td id="T_c64c6_row5_col1" class="data row5 col1">Annapolis</td>
+<td id="T_c64c6_row5_col2" class="data row5 col2">Private nonprofit</td>
+<td id="T_c64c6_row5_col3" class="data row5 col3">Baccalaureate: Arts &amp; Sciences</td>
+<td id="T_c64c6_row5_col4" class="data row5 col4">119</td>
+<td id="T_c64c6_row5_col5" class="data row5 col5">71%</td>
+<td id="T_c64c6_row5_col6" class="data row5 col6">71%</td>
+<td id="T_c64c6_row5_col7" class="data row5 col7">52% of peers</td>
+</tr>
+<tr class="odd">
+<td id="T_c64c6_row6_col0" class="data row6 col0"><a href="163268-university-of-maryland-baltimore-county.html">University of Maryland-Baltimore County</a></td>
+<td id="T_c64c6_row6_col1" class="data row6 col1">Baltimore</td>
+<td id="T_c64c6_row6_col2" class="data row6 col2">Public</td>
+<td id="T_c64c6_row6_col3" class="data row6 col3">Doctoral: Very High Research Activity</td>
+<td id="T_c64c6_row6_col4" class="data row6 col4">1,777</td>
+<td id="T_c64c6_row6_col5" class="data row6 col5">70%</td>
+<td id="T_c64c6_row6_col6" class="data row6 col6">74%</td>
+<td id="T_c64c6_row6_col7" class="data row6 col7">41% of peers</td>
+</tr>
+<tr class="even">
+<td id="T_c64c6_row7_col0" class="data row7 col0"><a href="163912-st-mary-s-college-of-maryland.html">St. Mary's College of Maryland</a></td>
+<td id="T_c64c6_row7_col1" class="data row7 col1">St. Mary's City</td>
+<td id="T_c64c6_row7_col2" class="data row7 col2">Public</td>
+<td id="T_c64c6_row7_col3" class="data row7 col3">Baccalaureate: Arts &amp; Sciences</td>
+<td id="T_c64c6_row7_col4" class="data row7 col4">376</td>
+<td id="T_c64c6_row7_col5" class="data row7 col5">70%</td>
+<td id="T_c64c6_row7_col6" class="data row7 col6">57%</td>
+<td id="T_c64c6_row7_col7" class="data row7 col7">81% of peers</td>
+</tr>
+<tr class="odd">
+<td id="T_c64c6_row8_col0" class="data row8 col0"><a href="164076-towson-university.html">Towson University</a></td>
+<td id="T_c64c6_row8_col1" class="data row8 col1">Towson</td>
+<td id="T_c64c6_row8_col2" class="data row8 col2">Public</td>
+<td id="T_c64c6_row8_col3" class="data row8 col3">Master's: Larger Programs</td>
+<td id="T_c64c6_row8_col4" class="data row8 col4">2,986</td>
+<td id="T_c64c6_row8_col5" class="data row8 col5">69%</td>
+<td id="T_c64c6_row8_col6" class="data row8 col6">50%</td>
+<td id="T_c64c6_row8_col7" class="data row8 col7">95% of peers</td>
+</tr>
+<tr class="even">
+<td id="T_c64c6_row9_col0" class="data row9 col0"><a href="164173-stevenson-university.html">Stevenson University</a></td>
+<td id="T_c64c6_row9_col1" class="data row9 col1">Owings Mills</td>
+<td id="T_c64c6_row9_col2" class="data row9 col2">Private nonprofit</td>
+<td id="T_c64c6_row9_col3" class="data row9 col3">Master's: Larger Programs</td>
+<td id="T_c64c6_row9_col4" class="data row9 col4">603</td>
+<td id="T_c64c6_row9_col5" class="data row9 col5">68%</td>
+<td id="T_c64c6_row9_col6" class="data row9 col6">60%</td>
+<td id="T_c64c6_row9_col7" class="data row9 col7">75% of peers</td>
+</tr>
+<tr class="odd">
+<td id="T_c64c6_row10_col0" class="data row10 col0"><a href="163851-salisbury-university.html">Salisbury University</a></td>
+<td id="T_c64c6_row10_col1" class="data row10 col1">Salisbury</td>
+<td id="T_c64c6_row10_col2" class="data row10 col2">Public</td>
+<td id="T_c64c6_row10_col3" class="data row10 col3">Master's: Larger Programs</td>
+<td id="T_c64c6_row10_col4" class="data row10 col4">1,284</td>
+<td id="T_c64c6_row10_col5" class="data row10 col5">68%</td>
+<td id="T_c64c6_row10_col6" class="data row10 col6">50%</td>
+<td id="T_c64c6_row10_col7" class="data row10 col7">93% of peers</td>
+</tr>
+<tr class="even">
+<td id="T_c64c6_row11_col0" class="data row11 col0"><a href="163462-mount-st-mary-s-university.html">Mount St. Mary's University</a></td>
+<td id="T_c64c6_row11_col1" class="data row11 col1">Emmitsburg</td>
+<td id="T_c64c6_row11_col2" class="data row11 col2">Private nonprofit</td>
+<td id="T_c64c6_row11_col3" class="data row11 col3">Master's: Medium Programs</td>
+<td id="T_c64c6_row11_col4" class="data row11 col4">549</td>
+<td id="T_c64c6_row11_col5" class="data row11 col5">65%</td>
+<td id="T_c64c6_row11_col6" class="data row11 col6">56%</td>
+<td id="T_c64c6_row11_col7" class="data row11 col7">74% of peers</td>
+</tr>
+<tr class="odd">
+<td id="T_c64c6_row12_col0" class="data row12 col0"><a href="164216-washington-college.html">Washington College</a></td>
+<td id="T_c64c6_row12_col1" class="data row12 col1">Chestertown</td>
+<td id="T_c64c6_row12_col2" class="data row12 col2">Private nonprofit</td>
+<td id="T_c64c6_row12_col3" class="data row12 col3">Baccalaureate: Arts &amp; Sciences</td>
+<td id="T_c64c6_row12_col4" class="data row12 col4">309</td>
+<td id="T_c64c6_row12_col5" class="data row12 col5">65%</td>
+<td id="T_c64c6_row12_col6" class="data row12 col6">71%</td>
+<td id="T_c64c6_row12_col7" class="data row12 col7">37% of peers</td>
+</tr>
+<tr class="even">
+<td id="T_c64c6_row13_col0" class="data row13 col0"><a href="164270-mcdaniel-college.html">McDaniel College</a></td>
+<td id="T_c64c6_row13_col1" class="data row13 col1">Westminster</td>
+<td id="T_c64c6_row13_col2" class="data row13 col2">Private nonprofit</td>
+<td id="T_c64c6_row13_col3" class="data row13 col3">Master's: Larger Programs</td>
+<td id="T_c64c6_row13_col4" class="data row13 col4">414</td>
+<td id="T_c64c6_row13_col5" class="data row13 col5">63%</td>
+<td id="T_c64c6_row13_col6" class="data row13 col6">60%</td>
+<td id="T_c64c6_row13_col7" class="data row13 col7">60% of peers</td>
+</tr>
+<tr class="odd">
+<td id="T_c64c6_row14_col0" class="data row14 col0"><a href="162654-goucher-college.html">Goucher College</a></td>
+<td id="T_c64c6_row14_col1" class="data row14 col1">Baltimore</td>
+<td id="T_c64c6_row14_col2" class="data row14 col2">Private nonprofit</td>
+<td id="T_c64c6_row14_col3" class="data row14 col3">Baccalaureate: Arts &amp; Sciences</td>
+<td id="T_c64c6_row14_col4" class="data row14 col4">429</td>
+<td id="T_c64c6_row14_col5" class="data row14 col5">57%</td>
+<td id="T_c64c6_row14_col6" class="data row14 col6">71%</td>
+<td id="T_c64c6_row14_col7" class="data row14 col7">26% of peers</td>
+</tr>
+<tr class="even">
+<td id="T_c64c6_row15_col0" class="data row15 col0"><a href="162760-hood-college.html">Hood College</a></td>
+<td id="T_c64c6_row15_col1" class="data row15 col1">Frederick</td>
+<td id="T_c64c6_row15_col2" class="data row15 col2">Private nonprofit</td>
+<td id="T_c64c6_row15_col3" class="data row15 col3">Master's: Larger Programs</td>
+<td id="T_c64c6_row15_col4" class="data row15 col4">239</td>
+<td id="T_c64c6_row15_col5" class="data row15 col5">57%</td>
+<td id="T_c64c6_row15_col6" class="data row15 col6">60%</td>
+<td id="T_c64c6_row15_col7" class="data row15 col7">43% of peers</td>
+</tr>
+<tr class="odd">
+<td id="T_c64c6_row16_col0" class="data row16 col0"><a href="163578-notre-dame-of-maryland-university.html">Notre Dame of Maryland University</a></td>
+<td id="T_c64c6_row16_col1" class="data row16 col1">Baltimore</td>
+<td id="T_c64c6_row16_col2" class="data row16 col2">Private nonprofit</td>
+<td id="T_c64c6_row16_col3" class="data row16 col3">Master's: Larger Programs</td>
+<td id="T_c64c6_row16_col4" class="data row16 col4">224</td>
+<td id="T_c64c6_row16_col5" class="data row16 col5">50%</td>
+<td id="T_c64c6_row16_col6" class="data row16 col6">60%</td>
+<td id="T_c64c6_row16_col7" class="data row16 col7">28% of peers</td>
+</tr>
+<tr class="even">
+<td id="T_c64c6_row17_col0" class="data row17 col0"><a href="162584-frostburg-state-university.html">Frostburg State University</a></td>
+<td id="T_c64c6_row17_col1" class="data row17 col1">Frostburg</td>
+<td id="T_c64c6_row17_col2" class="data row17 col2">Public</td>
+<td id="T_c64c6_row17_col3" class="data row17 col3">Master's: Larger Programs</td>
+<td id="T_c64c6_row17_col4" class="data row17 col4">735</td>
+<td id="T_c64c6_row17_col5" class="data row17 col5">50%</td>
+<td id="T_c64c6_row17_col6" class="data row17 col6">50%</td>
+<td id="T_c64c6_row17_col7" class="data row17 col7">48% of peers</td>
+</tr>
+<tr class="odd">
+<td id="T_c64c6_row18_col0" class="data row18 col0"><a href="162061-capitol-technology-university.html">Capitol Technology University</a></td>
+<td id="T_c64c6_row18_col1" class="data row18 col1">Laurel</td>
+<td id="T_c64c6_row18_col2" class="data row18 col2">Private nonprofit</td>
+<td id="T_c64c6_row18_col3" class="data row18 col3">Doctoral/Professional</td>
+<td id="T_c64c6_row18_col4" class="data row18 col4">81</td>
+<td id="T_c64c6_row18_col5" class="data row18 col5">43%</td>
+<td id="T_c64c6_row18_col6" class="data row18 col6">61%</td>
+<td id="T_c64c6_row18_col7" class="data row18 col7">7% of peers</td>
+</tr>
+<tr class="even">
+<td id="T_c64c6_row19_col0" class="data row19 col0"><a href="163453-morgan-state-university.html">Morgan State University</a></td>
+<td id="T_c64c6_row19_col1" class="data row19 col1">Baltimore</td>
+<td id="T_c64c6_row19_col2" class="data row19 col2">Public</td>
+<td id="T_c64c6_row19_col3" class="data row19 col3">Doctoral: High Research Activity</td>
+<td id="T_c64c6_row19_col4" class="data row19 col4">1,326</td>
+<td id="T_c64c6_row19_col5" class="data row19 col5">41%</td>
+<td id="T_c64c6_row19_col6" class="data row19 col6">56%</td>
+<td id="T_c64c6_row19_col7" class="data row19 col7">8% of peers</td>
+</tr>
+<tr class="odd">
+<td id="T_c64c6_row20_col0" class="data row20 col0"><a href="162007-bowie-state-university.html">Bowie State University</a></td>
+<td id="T_c64c6_row20_col1" class="data row20 col1">Bowie</td>
+<td id="T_c64c6_row20_col2" class="data row20 col2">Public</td>
+<td id="T_c64c6_row20_col3" class="data row20 col3">Master's: Larger Programs</td>
+<td id="T_c64c6_row20_col4" class="data row20 col4">898</td>
+<td id="T_c64c6_row20_col5" class="data row20 col5">38%</td>
+<td id="T_c64c6_row20_col6" class="data row20 col6">50%</td>
+<td id="T_c64c6_row20_col7" class="data row20 col7">16% of peers</td>
+</tr>
+<tr class="even">
+<td id="T_c64c6_row21_col0" class="data row21 col0"><a href="161873-university-of-baltimore.html">University of Baltimore</a></td>
+<td id="T_c64c6_row21_col1" class="data row21 col1">Baltimore</td>
+<td id="T_c64c6_row21_col2" class="data row21 col2">Public</td>
+<td id="T_c64c6_row21_col3" class="data row21 col3">Master's: Larger Programs</td>
+<td id="T_c64c6_row21_col4" class="data row21 col4">76</td>
+<td id="T_c64c6_row21_col5" class="data row21 col5">38%</td>
+<td id="T_c64c6_row21_col6" class="data row21 col6">50%</td>
+<td id="T_c64c6_row21_col7" class="data row21 col7">16% of peers</td>
+</tr>
+<tr class="odd">
+<td id="T_c64c6_row22_col0" class="data row22 col0"><a href="163338-university-of-maryland-eastern-shore.html">University of Maryland Eastern Shore</a></td>
+<td id="T_c64c6_row22_col1" class="data row22 col1">Princess Anne</td>
+<td id="T_c64c6_row22_col2" class="data row22 col2">Public</td>
+<td id="T_c64c6_row22_col3" class="data row22 col3">Doctoral: High Research Activity</td>
+<td id="T_c64c6_row22_col4" class="data row22 col4">501</td>
+<td id="T_c64c6_row22_col5" class="data row22 col5">35%</td>
+<td id="T_c64c6_row22_col6" class="data row22 col6">56%</td>
+<td id="T_c64c6_row22_col7" class="data row22 col7">3% of peers</td>
+</tr>
+<tr class="even">
+<td id="T_c64c6_row23_col0" class="data row23 col0"><a href="162210-washington-adventist-university.html">Washington Adventist University</a></td>
+<td id="T_c64c6_row23_col1" class="data row23 col1">Takoma Park</td>
+<td id="T_c64c6_row23_col2" class="data row23 col2">Private nonprofit</td>
+<td id="T_c64c6_row23_col3" class="data row23 col3">Master's: Small Programs</td>
+<td id="T_c64c6_row23_col4" class="data row23 col4">169</td>
+<td id="T_c64c6_row23_col5" class="data row23 col5">28%</td>
+<td id="T_c64c6_row23_col6" class="data row23 col6">52%</td>
+<td id="T_c64c6_row23_col7" class="data row23 col7">5% of peers</td>
+</tr>
+<tr class="odd">
+<td id="T_c64c6_row24_col0" class="data row24 col0"><a href="163204-university-of-maryland-global-campus.html">University of Maryland Global Campus</a></td>
+<td id="T_c64c6_row24_col1" class="data row24 col1">Adelphi</td>
+<td id="T_c64c6_row24_col2" class="data row24 col2">Public</td>
+<td id="T_c64c6_row24_col3" class="data row24 col3">Master's: Larger Programs</td>
+<td id="T_c64c6_row24_col4" class="data row24 col4">132</td>
+<td id="T_c64c6_row24_col5" class="data row24 col5">28%</td>
+<td id="T_c64c6_row24_col6" class="data row24 col6">50%</td>
+<td id="T_c64c6_row24_col7" class="data row24 col7">4% of peers</td>
+</tr>
+<tr class="even">
+<td id="T_c64c6_row25_col0" class="data row25 col0"><a href="162283-coppin-state-university.html">Coppin State University</a></td>
+<td id="T_c64c6_row25_col1" class="data row25 col1">Baltimore</td>
+<td id="T_c64c6_row25_col2" class="data row25 col2">Public</td>
+<td id="T_c64c6_row25_col3" class="data row25 col3">Master's: Small Programs</td>
+<td id="T_c64c6_row25_col4" class="data row25 col4">389</td>
+<td id="T_c64c6_row25_col5" class="data row25 col5">26%</td>
+<td id="T_c64c6_row25_col6" class="data row25 col6">44%</td>
+<td id="T_c64c6_row25_col7" class="data row25 col7">0% of peers</td>
+</tr>
+<tr class="odd">
+<td id="T_c64c6_row26_col0" class="data row26 col0"><a href="163532-ner-israel-rabbinical-college.html">Ner Israel Rabbinical College</a></td>
+<td id="T_c64c6_row26_col1" class="data row26 col1">Baltimore</td>
+<td id="T_c64c6_row26_col2" class="data row26 col2">Private nonprofit</td>
+<td id="T_c64c6_row26_col3" class="data row26 col3">Special Focus: Faith-Related</td>
+<td id="T_c64c6_row26_col4" class="data row26 col4">34</td>
+<td id="T_c64c6_row26_col5" class="data row26 col5">24%</td>
+<td id="T_c64c6_row26_col6" class="data row26 col6">46%</td>
+<td id="T_c64c6_row26_col7" class="data row26 col7">26% of peers</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Source: IPEDS (National Center for Education Statistics) via the Urban Institute <a href="https://educationdata.urban.org/documentation/colleges.html">Education Data Portal</a>. Rates are for full-time, first-time, bachelor’s-seeking students completing within six years. Institutions with a cohort under 30 or fewer than ten peers are not included.</p>
+<!-- -->
+
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Student outcomes profiles"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "One automatically generated report per four-year institution, from public IPEDS data"</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">    theme: cosmo</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">    code-summary: "Show the SQL"</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">  echo: false</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">  warning: false</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="an">jupyter:</span><span class="co"> python3</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">#| tags: [parameters]</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>state <span class="op">=</span> <span class="st">"MD"</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> duckdb</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> Markdown</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>FOCUS, PEER, INK, MUTED, GRID <span class="op">=</span> <span class="st">"#2a78d6"</span>, <span class="st">"#8a8984"</span>, <span class="st">"#0b0b0b"</span>, <span class="st">"#52514e"</span>, <span class="st">"#e6e5e1"</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>con <span class="op">=</span> duckdb.<span class="ex">connect</span>()</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>con.execute(Path(<span class="st">"sql/model.sql"</span>).read_text())<span class="op">;</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: summary</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>summary <span class="op">=</span> con.execute(<span class="st">"""</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a><span class="st">    WITH latest AS (</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a><span class="st">        SELECT unitid, value, base</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="st">        FROM metrics</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="st">        WHERE metric = 'grad_rate'</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="st">          AND year = (SELECT max(year) FROM metrics WHERE metric = 'grad_rate')</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="st">    )</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="st">        u.inst_name,</span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="st">        u.city,</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a><span class="st">        u.control_label,</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="st">        u.carnegie_label,</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a><span class="st">        u.report_file,</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a><span class="st">        own.value AS grad_rate,</span></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a><span class="st">        own.base AS cohort,</span></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a><span class="st">        median(peer.value) AS peer_median,</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a><span class="st">        count(*) AS n_peers,</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a><span class="st">        avg((peer.value &lt; own.value)::INT) AS share_of_peers_below</span></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM report_universe AS u</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a><span class="st">    JOIN latest AS own USING (unitid)</span></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a><span class="st">    JOIN peer_pairs AS p USING (unitid)</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a><span class="st">    JOIN latest AS peer ON peer.unitid = p.peer_unitid</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a><span class="st">    WHERE u.state_abbr = $state</span></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a><span class="st">    GROUP BY ALL</span></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a><span class="st">    ORDER BY grad_rate DESC</span></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>, {<span class="st">"state"</span>: state}).df()</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>year <span class="op">=</span> con.sql(<span class="st">"SELECT max(year) FROM metrics WHERE metric = 'grad_rate'"</span>).fetchone()[<span class="dv">0</span>]</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>Markdown(<span class="ss">f"""</span></span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a><span class="ss">Each of the **</span><span class="sc">{</span><span class="bu">len</span>(summary)<span class="sc">}</span><span class="ss"> institutions in </span><span class="sc">{</span>state<span class="sc">}</span><span class="ss">** below has its own report, rendered from a single</span></span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a><span class="ss">parameterized Quarto template. Every report compares the institution with its national peers:</span></span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a><span class="ss">other institutions with the same control and Carnegie classification. Click a name or a dot to</span></span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a><span class="ss">open a report.</span></span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span>)</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a><span class="fu">## Six-year graduation rate, `{python} str(year)`</span></span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: overview</span></span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>OWN, PEERS <span class="op">=</span> <span class="st">"Institution"</span>, <span class="st">"Median of its national peers"</span></span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>order <span class="op">=</span> summary.inst_name.tolist()</span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> alt.Y(<span class="st">"inst_name:N"</span>, title<span class="op">=</span><span class="va">None</span>, sort<span class="op">=</span>order, axis<span class="op">=</span>alt.Axis(labelLimit<span class="op">=</span><span class="dv">300</span>, labelColor<span class="op">=</span>INK, labelFontSize<span class="op">=</span><span class="dv">12</span>, grid<span class="op">=</span><span class="va">False</span>, domain<span class="op">=</span><span class="va">False</span>, ticks<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>x_scale <span class="op">=</span> alt.Scale(domain<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">1</span>])</span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>base <span class="op">=</span> alt.Chart(summary)</span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>link <span class="op">=</span> base.mark_rule(color<span class="op">=</span>PEER, strokeWidth<span class="op">=</span><span class="dv">2</span>, opacity<span class="op">=</span><span class="fl">0.5</span>).encode(</span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>y,</span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>alt.X(<span class="st">"grad_rate:Q"</span>, title<span class="op">=</span><span class="va">None</span>, scale<span class="op">=</span>x_scale,</span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>            axis<span class="op">=</span>alt.Axis(<span class="bu">format</span><span class="op">=</span><span class="st">".0%"</span>, orient<span class="op">=</span><span class="st">"top"</span>, values<span class="op">=</span>[<span class="dv">0</span>, <span class="fl">0.2</span>, <span class="fl">0.4</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>, <span class="dv">1</span>], gridColor<span class="op">=</span>GRID, domain<span class="op">=</span><span class="va">False</span>, ticks<span class="op">=</span><span class="va">False</span>, labelColor<span class="op">=</span>MUTED)),</span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>    x2<span class="op">=</span><span class="st">"peer_median:Q"</span>,</span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>dots <span class="op">=</span> (</span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>    base.transform_fold([<span class="st">"grad_rate"</span>, <span class="st">"peer_median"</span>], as_<span class="op">=</span>[<span class="st">"series"</span>, <span class="st">"x"</span>])</span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>    .transform_calculate(series<span class="op">=</span><span class="ss">f"datum.series == 'grad_rate' ? </span><span class="sc">{</span>OWN<span class="sc">!r}</span><span class="ss"> : </span><span class="sc">{</span>PEERS<span class="sc">!r}</span><span class="ss">"</span>)</span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>    .mark_point(size<span class="op">=</span><span class="dv">120</span>, filled<span class="op">=</span><span class="va">True</span>, opacity<span class="op">=</span><span class="dv">1</span>, stroke<span class="op">=</span><span class="st">"white"</span>, strokeWidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>    .encode(</span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>        y<span class="op">=</span>y, x<span class="op">=</span>alt.X(<span class="st">"x:Q"</span>, scale<span class="op">=</span>x_scale),</span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>        color<span class="op">=</span>alt.Color(<span class="st">"series:N"</span>, scale<span class="op">=</span>alt.Scale(domain<span class="op">=</span>[OWN, PEERS], <span class="bu">range</span><span class="op">=</span>[FOCUS, PEER]),</span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a>                        legend<span class="op">=</span>alt.Legend(orient<span class="op">=</span><span class="st">"top"</span>, title<span class="op">=</span><span class="va">None</span>, labelColor<span class="op">=</span>INK, labelFontSize<span class="op">=</span><span class="dv">12</span>, labelLimit<span class="op">=</span><span class="dv">300</span>)),</span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a>        href<span class="op">=</span><span class="st">"report_file:N"</span>,</span>
+<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a>        tooltip<span class="op">=</span>[</span>
+<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>            alt.Tooltip(<span class="st">"inst_name:N"</span>, title<span class="op">=</span><span class="st">"Institution"</span>),</span>
+<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>            alt.Tooltip(<span class="st">"carnegie_label:N"</span>, title<span class="op">=</span><span class="st">"Peer group"</span>),</span>
+<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a>            alt.Tooltip(<span class="st">"grad_rate:Q"</span>, title<span class="op">=</span><span class="st">"Graduation rate"</span>, <span class="bu">format</span><span class="op">=</span><span class="st">".1%"</span>),</span>
+<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a>            alt.Tooltip(<span class="st">"peer_median:Q"</span>, title<span class="op">=</span><span class="st">"Peer median"</span>, <span class="bu">format</span><span class="op">=</span><span class="st">".1%"</span>),</span>
+<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a>            alt.Tooltip(<span class="st">"n_peers:Q"</span>, title<span class="op">=</span><span class="st">"Peers"</span>),</span>
+<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a>(link <span class="op">+</span> dots).properties(width<span class="op">=</span><span class="dv">380</span>, height<span class="op">=</span>alt.Step(<span class="dv">24</span>)).configure(</span>
+<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a>    background<span class="op">=</span><span class="st">"transparent"</span>, font<span class="op">=</span><span class="st">"system-ui, -apple-system, 'Segoe UI', sans-serif"</span></span>
+<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a>).configure_view(stroke<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a><span class="fu">## All reports</span></span>
+<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: table</span></span>
+<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a>table <span class="op">=</span> summary.assign(</span>
+<span id="cb2-129"><a href="#cb2-129" aria-hidden="true" tabindex="-1"></a>    Institution<span class="op">=</span>[<span class="ss">f"&lt;a href='</span><span class="sc">{</span>f<span class="sc">}</span><span class="ss">'&gt;</span><span class="sc">{</span>n<span class="sc">}</span><span class="ss">&lt;/a&gt;"</span> <span class="cf">for</span> f, n <span class="kw">in</span> <span class="bu">zip</span>(summary.report_file, summary.inst_name)],</span>
+<span id="cb2-130"><a href="#cb2-130" aria-hidden="true" tabindex="-1"></a>    City<span class="op">=</span>summary.city,</span>
+<span id="cb2-131"><a href="#cb2-131" aria-hidden="true" tabindex="-1"></a>    Control<span class="op">=</span>summary.control_label,</span>
+<span id="cb2-132"><a href="#cb2-132" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>{</span>
+<span id="cb2-133"><a href="#cb2-133" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Peer group (Carnegie)"</span>: summary.carnegie_label,</span>
+<span id="cb2-134"><a href="#cb2-134" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Cohort"</span>: summary.cohort.<span class="bu">map</span>(<span class="st">"</span><span class="sc">{:,.0f}</span><span class="st">"</span>.<span class="bu">format</span>),</span>
+<span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Graduation rate"</span>: summary.grad_rate.<span class="bu">map</span>(<span class="st">"</span><span class="sc">{:.0%}</span><span class="st">"</span>.<span class="bu">format</span>),</span>
+<span id="cb2-136"><a href="#cb2-136" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Peer median"</span>: summary.peer_median.<span class="bu">map</span>(<span class="st">"</span><span class="sc">{:.0%}</span><span class="st">"</span>.<span class="bu">format</span>),</span>
+<span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Higher than"</span>: summary.share_of_peers_below.<span class="bu">map</span>(<span class="st">"</span><span class="sc">{:.0%}</span><span class="st"> of peers"</span>.<span class="bu">format</span>),</span>
+<span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb2-139"><a href="#cb2-139" aria-hidden="true" tabindex="-1"></a>)[[<span class="st">"Institution"</span>, <span class="st">"City"</span>, <span class="st">"Control"</span>, <span class="st">"Peer group (Carnegie)"</span>, <span class="st">"Cohort"</span>, <span class="st">"Graduation rate"</span>, <span class="st">"Peer median"</span>, <span class="st">"Higher than"</span>]]</span>
+<span id="cb2-140"><a href="#cb2-140" aria-hidden="true" tabindex="-1"></a>table.style.hide(axis<span class="op">=</span><span class="st">"index"</span>)</span>
+<span id="cb2-141"><a href="#cb2-141" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-142"><a href="#cb2-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-143"><a href="#cb2-143" aria-hidden="true" tabindex="-1"></a>Source: IPEDS (National Center for Education Statistics) via the Urban Institute</span>
+<span id="cb2-144"><a href="#cb2-144" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Education Data Portal</span><span class="co">](https://educationdata.urban.org/documentation/colleges.html)</span>.</span>
+<span id="cb2-145"><a href="#cb2-145" aria-hidden="true" tabindex="-1"></a>Rates are for full-time, first-time, bachelor's-seeking students completing within six years.</span>
+<span id="cb2-146"><a href="#cb2-146" aria-hidden="true" tabindex="-1"></a>Institutions with a cohort under 30 or fewer than ten peers are not included.</span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

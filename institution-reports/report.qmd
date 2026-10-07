@@ -1,0 +1,490 @@
+---
+title: "Student outcomes profile"
+subtitle: "Graduation, retention, and enrollment against national peers"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 2
+    code-fold: true
+    code-summary: "Show the SQL"
+    code-tools: true
+    df-print: default
+    fig-align: left
+execute:
+  echo: false
+  warning: false
+jupyter: python3
+---
+
+```{python}
+#| tags: [parameters]
+# Rendered once per institution: quarto render report.qmd -P unitid:<IPEDS UnitID>
+unitid = 164076
+```
+
+```{python}
+#| label: setup
+from pathlib import Path
+
+import altair as alt
+import duckdb
+import pandas as pd
+from IPython.display import HTML, Markdown
+
+FOCUS, PEER, INK, MUTED, GRID = "#2a78d6", "#8a8984", "#0b0b0b", "#52514e", "#e6e5e1"
+WIDTH = 640
+
+con = duckdb.connect()
+con.execute(Path("sql/model.sql").read_text())
+
+
+def query(sql: str) -> pd.DataFrame:
+    """Run a query against the IPEDS model, bound to this report's institution."""
+    return con.execute(sql, {"unitid": int(unitid)}).df()
+
+
+@alt.theme.register("report", enable=True)
+def report_theme() -> alt.theme.ThemeConfig:
+    return {
+        "config": {
+            "background": "transparent",
+            "view": {"stroke": None},
+            "font": "system-ui, -apple-system, 'Segoe UI', sans-serif",
+            "axis": {
+                "domain": False, "ticks": False, "grid": True, "gridColor": GRID,
+                "labelColor": MUTED, "titleColor": MUTED, "labelFontSize": 12,
+                "titleFontSize": 12, "titleFontWeight": "normal", "labelPadding": 6,
+            },
+            "legend": {
+                "orient": "top", "direction": "horizontal", "title": None,
+                "labelColor": INK, "labelFontSize": 12, "labelLimit": 360,
+                "symbolStrokeWidth": 3, "symbolOpacity": 1,
+            },
+        }
+    }
+
+
+def pct(x: float) -> str:
+    return f"{x:.0%}"
+
+
+def signed(x: float) -> str:
+    return f"{x:+.0%}".replace("-", "\u2212")
+
+
+def gap(a: float, b: float, unit: str = "points") -> str:
+    """'4 points above' / 'level with', for a pair of rates."""
+    diff = round((a - b) * 100)
+    if diff == 0:
+        return "level with"
+    return f"{abs(diff)} {unit[:-1] if abs(diff) == 1 else unit} {'above' if diff > 0 else 'below'}"
+
+
+def moved(a: float, b: float) -> str:
+    """'rose 4 points' / 'was unchanged', from a to b."""
+    diff = round((b - a) * 100)
+    if diff == 0:
+        return "was unchanged"
+    return f"{'rose' if diff > 0 else 'fell'} {abs(diff)} point{'' if abs(diff) == 1 else 's'}"
+```
+
+```{python}
+#| label: profile
+profile = query("""
+    SELECT u.*, (SELECT max(year) FROM metrics WHERE metric = 'grad_rate') AS latest_year
+    FROM report_universe AS u
+    WHERE u.unitid = $unitid
+""")
+if profile.empty:
+    raise SystemExit(f"UnitID {unitid} is not in report_universe (see sql/model.sql).")
+
+inst = profile.iloc[0]
+NAME, YEAR, N_PEERS = inst.inst_name, int(inst.latest_year), int(inst.n_peers)
+PEER_LABEL = "Peer median"
+PCT_AXIS = alt.Axis(format=".0%", values=[0, 0.2, 0.4, 0.6, 0.8, 1])
+
+Markdown(f"""
+**{NAME}** · {inst.city}, {inst.state_abbr} · {inst.control_label} · {inst.carnegie_label} · IPEDS UnitID {inst.unitid}
+
+Compared with **{N_PEERS} peer institutions**: every other {inst.control_label.lower()}
+institution in the United States with the same Carnegie classification.
+""")
+```
+
+## At a glance
+
+```{python}
+#| label: standing
+#| echo: true
+standing = query("""
+    WITH peer_group AS (
+        SELECT m.*, m.unitid = $unitid AS is_focus
+        FROM metrics AS m
+        WHERE m.metric IN ('grad_rate', 'retention_rate')
+          AND m.year = (SELECT max(year) FROM metrics WHERE metric = 'grad_rate')
+          AND (m.unitid = $unitid
+               OR m.unitid IN (SELECT peer_unitid FROM peer_pairs WHERE unitid = $unitid))
+    )
+    SELECT
+        g.metric,
+        i.inst_name,
+        i.state_abbr,
+        g.is_focus,
+        g.value,
+        g.base,
+        -- share of the group with a lower value
+        percent_rank() OVER (PARTITION BY g.metric ORDER BY g.value) AS pct_rank,
+        count(*) OVER (PARTITION BY g.metric) - 1 AS n_peers,
+        median(g.value) FILTER (NOT g.is_focus) OVER (PARTITION BY g.metric) AS peer_median
+    FROM peer_group AS g
+    JOIN institutions AS i USING (unitid)
+    ORDER BY g.metric, g.value
+""")
+
+enrollment = query("""
+    WITH peer_group AS (
+        SELECT $unitid AS unitid
+        UNION ALL
+        SELECT peer_unitid FROM peer_pairs WHERE unitid = $unitid
+    ),
+    indexed AS (
+        SELECT
+            m.unitid,
+            m.year,
+            m.value AS headcount,
+            m.value / first_value(m.value) OVER by_inst - 1 AS change,
+            min(m.year) OVER by_inst AS first_year
+        FROM metrics AS m
+        JOIN peer_group USING (unitid)
+        WHERE m.metric = 'enrollment'
+        WINDOW by_inst AS (PARTITION BY m.unitid ORDER BY m.year)
+    )
+    -- keep only institutions observed from the first year, so every index
+    -- starts from the same base
+    SELECT
+        year,
+        max(headcount) FILTER (unitid = $unitid) AS headcount,
+        max(change) FILTER (unitid = $unitid) AS value,
+        quantile_cont(change, 0.25) FILTER (unitid <> $unitid) AS peer_p25,
+        median(change) FILTER (unitid <> $unitid) AS peer_median,
+        quantile_cont(change, 0.75) FILTER (unitid <> $unitid) AS peer_p75,
+        count(*) FILTER (unitid <> $unitid) AS n_peers
+    FROM indexed
+    WHERE first_year = (SELECT min(year) FROM metrics WHERE metric = 'enrollment')
+    GROUP BY year
+    ORDER BY year
+""")
+
+focus = standing[standing.is_focus].set_index("metric")
+
+
+def tile(label: str, value: str, lines: list[str]) -> str:
+    detail = "".join(f"<div class='tile-detail'>{line}</div>" for line in lines)
+    return f"<div class='tile'><div class='tile-label'>{label}</div><div class='tile-value'>{value}</div>{detail}</div>"
+
+
+def rate_tile(metric: str, label: str) -> str:
+    if metric not in focus.index:
+        return tile(label, "n/a", ["Not reported, or cohort under 30"])
+    row = focus.loc[metric]
+    return tile(label, pct(row.value), [
+        f"Peer median {pct(row.peer_median)}",
+        f"Higher than {pct(row.pct_rank)} of {int(row.n_peers)} peers",
+    ])
+
+
+tiles = [
+    rate_tile("grad_rate", f"Six-year graduation rate, {YEAR}"),
+    rate_tile("retention_rate", f"First-year retention rate, {YEAR}"),
+]
+enr = enrollment.dropna(subset=["value"])
+if enr.empty:
+    tiles.append(tile("Fall enrollment", "n/a", ["No continuous series"]))
+else:
+    first, last = enr.iloc[0], enr.iloc[-1]
+    tiles.append(tile(f"Fall enrollment, {int(last.year)}", f"{last.headcount:,.0f}", [
+        f"{signed(last.value)} since {int(first.year)}",
+        f"Peer median {signed(last.peer_median)}",
+    ]))
+
+HTML(f"""
+<style>
+.tiles {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin: 1rem 0 1.5rem; }}
+.tile {{ border: 1px solid {GRID}; border-radius: 8px; padding: 14px 16px; }}
+.tile-label {{ color: {MUTED}; font-size: .85rem; }}
+.tile-value {{ color: {INK}; font-size: 2.1rem; font-weight: 600; line-height: 1.25; }}
+.tile-detail {{ color: {MUTED}; font-size: .85rem; }}
+</style>
+<div class="tiles">{''.join(tiles)}</div>
+""")
+```
+
+## Graduation rate
+
+```{python}
+#| label: trends
+#| echo: true
+trends = query("""
+    WITH peer AS (
+        SELECT
+            m.metric,
+            m.year,
+            quantile_cont(m.value, 0.25) AS peer_p25,
+            median(m.value) AS peer_median,
+            quantile_cont(m.value, 0.75) AS peer_p75,
+            count(*) AS n_peers
+        FROM peer_pairs AS p
+        JOIN metrics AS m ON m.unitid = p.peer_unitid
+        WHERE p.unitid = $unitid AND m.metric IN ('grad_rate', 'retention_rate')
+        GROUP BY ALL
+    )
+    SELECT peer.*, m.value, m.base
+    FROM peer
+    LEFT JOIN metrics AS m
+        ON m.unitid = $unitid AND m.metric = peer.metric AND m.year = peer.year
+    ORDER BY peer.metric, peer.year
+""")
+
+
+def trend_chart(df: pd.DataFrame, y_title: str, fmt: str, domain=None, x_title="Year") -> alt.LayerChart:
+    """Institution line over the peer median and the peers' interquartile band."""
+    x = alt.X("year:O", title=x_title, axis=alt.Axis(labelAngle=0, grid=False))
+    y_scale = alt.Scale(domain=domain) if domain else alt.Scale(zero=True, nice=True)
+    base = alt.Chart(df)
+
+    band = base.mark_area(color=PEER, opacity=0.16).encode(
+        x=x, y=alt.Y("peer_p25:Q", title=y_title, scale=y_scale, axis=alt.Axis(format=fmt)),
+        y2="peer_p75:Q",
+    )
+    lines = (
+        base.transform_fold(["value", "peer_median"], as_=["series", "y"])
+        .transform_calculate(series=f"datum.series == 'value' ? {NAME!r} : {PEER_LABEL!r}")
+        .mark_line(strokeWidth=2.5, point=alt.OverlayMarkDef(size=45, filled=True, stroke="white", strokeWidth=1.5))
+        .encode(
+            x=x, y="y:Q",
+            color=alt.Color("series:N", scale=alt.Scale(domain=[NAME, PEER_LABEL], range=[FOCUS, PEER])),
+        )
+    )
+    hover = alt.selection_point(on="pointerover", nearest=True, fields=["year"], empty=False, clear="pointerout")
+    crosshair = (
+        base.mark_rule(color=MUTED, strokeWidth=1)
+        .encode(
+            x=x,
+            opacity=alt.condition(hover, alt.value(0.6), alt.value(0)),
+            tooltip=[
+                alt.Tooltip("year:O", title="Year"),
+                alt.Tooltip("value:Q", title=NAME, format=fmt),
+                alt.Tooltip("peer_median:Q", title=PEER_LABEL, format=fmt),
+                alt.Tooltip("peer_p25:Q", title="Peers, 25th percentile", format=fmt),
+                alt.Tooltip("peer_p75:Q", title="Peers, 75th percentile", format=fmt),
+                alt.Tooltip("n_peers:Q", title="Peers reporting"),
+            ],
+        )
+        .add_params(hover)
+    )
+    return (band + lines + crosshair).properties(width=WIDTH, height=280)
+
+
+def trend_sentence(df: pd.DataFrame, noun: str) -> str:
+    own = df.dropna(subset=["value"])
+    if len(own) < 2:
+        return f"{NAME} does not have enough reported years to show a trend in its {noun}."
+    a, b = own.iloc[0], own.iloc[-1]
+    return (
+        f"{NAME}'s {noun} {moved(a.value, b.value)} between {int(a.year)} and {int(b.year)}, "
+        f"from {pct(a.value)} to {pct(b.value)}. Over the same years the peer median "
+        f"{moved(a.peer_median, b.peer_median)}, leaving {NAME} {gap(b.value, b.peer_median)} "
+        f"the peer median of {pct(b.peer_median)}."
+    )
+
+
+BAND_NOTE = "The shaded band covers the middle half of peer institutions (25th to 75th percentile)."
+```
+
+```{python}
+#| label: grad-trend
+grad = trends[trends.metric == "grad_rate"]
+display(Markdown(trend_sentence(grad, "six-year graduation rate") + " " + BAND_NOTE))
+trend_chart(grad, "Six-year graduation rate", ".0%", domain=[0, 1], x_title="Reporting year (cohort entered six years earlier)")
+```
+
+## Retention
+
+```{python}
+#| label: retention-trend
+retention = trends[trends.metric == "retention_rate"]
+display(Markdown(trend_sentence(retention, "first-year retention rate") + " " + BAND_NOTE))
+trend_chart(retention, "Full-time first-year retention rate", ".0%", domain=[0, 1], x_title="Fall of return")
+```
+
+## Enrollment
+
+```{python}
+#| label: enrollment-trend
+if enr.empty:
+    display(Markdown(f"{NAME} does not have a continuous fall enrollment series for this period."))
+else:
+    direction = "grew" if last.value > 0 else "shrank"
+    display(Markdown(
+        f"Total fall headcount at {NAME} {direction} {abs(last.value):.0%} between {int(first.year)} and "
+        f"{int(last.year)}, from {first.headcount:,.0f} to {last.headcount:,.0f} students. The median peer "
+        f"changed by {signed(last.peer_median)}. Enrollment is shown as change from {int(first.year)} "
+        f"because peers differ widely in size. " + BAND_NOTE
+    ))
+    display(trend_chart(enrollment, f"Change in fall enrollment since {int(first.year)}", "+.0%", x_title="Fall"))
+```
+
+## Standing among peers
+
+```{python}
+#| label: peer-strip
+labels = {"grad_rate": "Six-year graduation rate", "retention_rate": "First-year retention rate"}
+strip = standing.assign(
+    measure=standing.metric.map(labels),
+    series=standing.is_focus.map({True: NAME, False: "Each peer institution"}),
+)
+
+parts = [
+    f"{labels[m].lower()} is higher than {pct(focus.loc[m].pct_rank)} of its peers"
+    for m in labels if m in focus.index
+]
+display(Markdown(
+    f"In {YEAR}, {NAME}'s " + " and its ".join(parts) + ". Each tick is one peer institution; hover for its name."
+))
+
+y = alt.Y("measure:N", title=None, sort=list(labels.values()), axis=alt.Axis(grid=False, labelColor=INK, labelLimit=200))
+x = alt.X("value:Q", title=None, scale=alt.Scale(domain=[0, 1]), axis=PCT_AXIS)
+color = alt.Color("series:N", scale=alt.Scale(domain=[NAME, "Each peer institution"], range=[FOCUS, PEER]))
+tooltip = [
+    alt.Tooltip("inst_name:N", title="Institution"),
+    alt.Tooltip("state_abbr:N", title="State"),
+    alt.Tooltip("measure:N", title="Measure"),
+    alt.Tooltip("value:Q", title="Rate", format=".1%"),
+    alt.Tooltip("base:Q", title="Cohort", format=","),
+]
+peers_layer = (
+    alt.Chart(strip[~strip.is_focus])
+    .mark_tick(thickness=2, size=34, opacity=0.45)
+    .encode(x=x, y=y, color=color, tooltip=tooltip)
+)
+focus_layer = (
+    alt.Chart(strip[strip.is_focus])
+    .mark_point(size=190, filled=True, opacity=1, stroke="white", strokeWidth=2)
+    .encode(x=x, y=y, color=color, tooltip=tooltip)
+)
+(peers_layer + focus_layer).properties(width=WIDTH - 150, height=alt.Step(64))
+```
+
+## Graduation rate by race and ethnicity
+
+```{python}
+#| label: race
+#| echo: true
+by_race = query("""
+    WITH peer AS (
+        SELECT
+            g.race,
+            sum(g.completers) / sum(g.cohort) AS peer_rate,
+            sum(g.cohort) AS peer_cohort
+        FROM peer_pairs AS p
+        JOIN grad_by_race AS g ON g.unitid = p.peer_unitid
+        WHERE p.unitid = $unitid
+        GROUP BY g.race
+    )
+    SELECT
+        g.race,
+        g.sort_order,
+        g.cohort,
+        g.completers / g.cohort AS rate,
+        peer.peer_rate,
+        peer.peer_cohort,
+        g.cohort >= min_cohort() AS reportable
+    FROM grad_by_race AS g
+    JOIN peer USING (race)
+    WHERE g.unitid = $unitid
+    ORDER BY g.sort_order
+""")
+
+shown, hidden = by_race[by_race.reportable], by_race[~by_race.reportable]
+PEERS_COMBINED = "Peers combined"
+
+if shown.empty:
+    display(Markdown(f"No racial or ethnic group in {NAME}'s {YEAR} cohort had at least 30 students, so no rates are shown."))
+else:
+    note = (
+        f"Six-year graduation rates for {NAME}'s {YEAR} reporting cohort, next to the rate for all students "
+        f"in the same group across the {N_PEERS} peer institutions combined."
+    )
+    if not hidden.empty:
+        note += f" Not shown, because the cohort had fewer than 30 students: {', '.join(hidden.race)}."
+    display(Markdown(note))
+
+    order = shown.race.tolist()
+    y = alt.Y("race:N", title=None, sort=order, axis=alt.Axis(grid=False, labelColor=INK, labelLimit=240))
+    x_scale = alt.Scale(domain=[0, 1])
+    base = alt.Chart(shown)
+    link = base.mark_rule(color=PEER, strokeWidth=2, opacity=0.5).encode(
+        y=y, x=alt.X("rate:Q", title="Six-year graduation rate", scale=x_scale, axis=PCT_AXIS), x2="peer_rate:Q",
+    )
+    dots = (
+        base.transform_fold(["rate", "peer_rate"], as_=["series", "x"])
+        .transform_calculate(series=f"datum.series == 'rate' ? {NAME!r} : {PEERS_COMBINED!r}")
+        .mark_point(size=150, filled=True, opacity=1, stroke="white", strokeWidth=2)
+        .encode(
+            y=y, x=alt.X("x:Q", scale=x_scale),
+            color=alt.Color("series:N", scale=alt.Scale(domain=[NAME, PEERS_COMBINED], range=[FOCUS, PEER])),
+            tooltip=[
+                alt.Tooltip("race:N", title="Group"),
+                alt.Tooltip("rate:Q", title=NAME, format=".1%"),
+                alt.Tooltip("cohort:Q", title="Cohort", format=","),
+                alt.Tooltip("peer_rate:Q", title=PEERS_COMBINED, format=".1%"),
+                alt.Tooltip("peer_cohort:Q", title="Peer cohort", format=","),
+            ],
+        )
+    )
+    display((link + dots).properties(width=WIDTH - 200, height=alt.Step(40)))
+    display(
+        shown.assign(**{
+            "Group": shown.race,
+            "Cohort": shown.cohort.map("{:,.0f}".format),
+            NAME: shown.rate.map(pct),
+            PEERS_COMBINED: shown.peer_rate.map(pct),
+        })[["Group", "Cohort", NAME, PEERS_COMBINED]].style.hide(axis="index")
+    )
+```
+
+## Data and methods
+
+```{python}
+#| label: methods
+years = query("SELECT min(year) AS first, max(year) AS last FROM metrics WHERE unitid = $unitid").iloc[0]
+Markdown(f"""
+**Source.** Integrated Postsecondary Education Data System (IPEDS), National Center for
+Education Statistics, retrieved through the Urban Institute
+[Education Data Portal](https://educationdata.urban.org/documentation/colleges.html).
+Years {int(years['first'])} to {int(years['last'])}. The snapshot lives in `data/` as Parquet and is
+queried with DuckDB; `scripts/fetch_ipeds.py` rebuilds it.
+
+**Measures.**
+
+- *Six-year graduation rate*: share of full-time, first-time, bachelor's-seeking students who completed
+  at the same institution within 150% of normal time. The year is the reporting year; the cohort
+  entered six years earlier.
+- *First-year retention rate*: share of full-time, first-time students from the previous fall who
+  returned the next fall.
+- *Fall enrollment*: total headcount, all levels and attendance statuses.
+
+**Peers.** Every other institution with the same control ({inst.control_label.lower()}) and 2021
+Carnegie Basic classification ({inst.carnegie_label}), nationwide. Peer statistics for each year use
+the peers that reported that year, so the set shifts slightly over time.
+
+**Small cohorts.** Rates based on fewer than 30 students are left out, for this institution and
+for its peers.
+
+**Limits.** These rates follow first-time, full-time students only; transfer-in and part-time students
+are not counted, and students who transfer out and finish elsewhere count as non-completers. The
+peer group is a classification match, not a statistical one: it does not adjust for selectivity or
+student background.
+""")
+```
