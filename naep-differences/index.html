@@ -90,9 +90,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul class="collapse">
-  <li><a href="#where-does-it-really-stand" id="toc-where-does-it-really-stand" class="nav-link active" data-scroll-target="#where-does-it-really-stand">Where does it really stand?</a></li>
+  <li><a href="#where-does-this-jurisdiction-stand" id="toc-where-does-this-jurisdiction-stand" class="nav-link active" data-scroll-target="#where-does-this-jurisdiction-stand">Where does this jurisdiction stand?</a></li>
   <li><a href="#has-it-recovered-since-2019" id="toc-has-it-recovered-since-2019" class="nav-link" data-scroll-target="#has-it-recovered-since-2019">Has it recovered since 2019?</a></li>
-  <li><a href="#who-lost-ground" id="toc-who-lost-ground" class="nav-link" data-scroll-target="#who-lost-ground">Who lost ground?</a></li>
+  <li><a href="#who-was-affected-most" id="toc-who-was-affected-most" class="nav-link" data-scroll-target="#who-was-affected-most">Who was affected most?</a></li>
   <li><a href="#the-comparison-as-a-table" id="toc-the-comparison-as-a-table" class="nav-link" data-scroll-target="#the-comparison-as-a-table">The comparison as a table</a></li>
   <li><a href="#data-and-method" id="toc-data-and-method" class="nav-link" data-scroll-target="#data-and-method">Data and method</a></li>
   </ul>
@@ -497,8 +497,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<section id="where-does-it-really-stand" class="level2">
-<h2 class="anchored" data-anchor-id="where-does-it-really-stand">Where does it really stand?</h2>
+<section id="where-does-this-jurisdiction-stand" class="level2">
+<h2 class="anchored" data-anchor-id="where-does-this-jurisdiction-stand">Where does this jurisdiction stand?</h2>
 <div class="cell">
 <details class="code-fold hidden">
 <summary>Show the R code</summary>
@@ -826,8 +826,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </section>
-<section id="who-lost-ground" class="level2">
-<h2 class="anchored" data-anchor-id="who-lost-ground">Who lost ground?</h2>
+<section id="who-was-affected-most" class="level2">
+<h2 class="anchored" data-anchor-id="who-was-affected-most">Who was affected most?</h2>
 <p>An average can hide a widening spread. NAEP also reports the scores at the 10th, 25th, 50th, 75th, and 90th percentiles, which show whether lower- and higher-performing students moved together.</p>
 <div class="cell">
 <details class="code-fold hidden">
@@ -995,7 +995,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="data-and-method" class="level2">
 <h2 class="anchored" data-anchor-id="data-and-method">Data and method</h2>
-<p><strong>Source.</strong> National Assessment of Educational Progress (NAEP), mathematics and reading, grades 4 and 8, 2003 to 2024, public schools. Estimates and significance tests come from the <a href="https://www.nationsreportcard.gov/api_endpoint.aspx">NAEP Data Service API</a> of the National Center for Education Statistics. <code>scripts/fetch_naep.R</code> rebuilds the data files.</p>
+<p><strong>Source.</strong> National Assessment of Educational Progress (NAEP), mathematics and reading, grades 4 and 8, 2003 to 2024, public schools. Estimates and significance tests come from the <a href="https://www.nationsreportcard.gov/api_endpoint.aspx">NAEP Data Service API</a> of the National Center for Education Statistics.</p>
 <p><strong>Significance tests.</strong> Every “significantly higher”, “lower”, or “not significantly different” on this page is NCES’s own determination, as returned by the API. Nothing is re-estimated here. The API does not publish standard errors, so this page shows no confidence intervals and does not approximate any. “Not significantly different” means the data cannot distinguish the two scores. It does not mean they are equal.</p>
 <p><strong>Rank range.</strong> The raw rank orders the unrounded average scores of the 52 jurisdictions (50 states, the District of Columbia, and DoDEA). The rank range is derived here from NCES’s pairwise tests: the best rank is one more than the number of jurisdictions that scored significantly higher, and the worst rank is 52 minus the number that scored significantly lower. It is a summary of the pairwise results, not a formal confidence interval for the rank.</p>
 <p><strong>Limits.</strong></p>
@@ -1640,7 +1640,7 @@ window._ojs.runtime.interpretFromScriptTags();
 <span id="cb21-173"><a href="#cb21-173" aria-hidden="true" tabindex="-1"></a>key <span class="op">=</span> items <span class="kw">=&gt;</span> <span class="fu">html</span><span class="vs">`&lt;div class="key"&gt;</span><span class="sc">${</span>items<span class="op">.</span><span class="fu">map</span>(([cls<span class="op">,</span> style<span class="op">,</span> text]) <span class="kw">=&gt;</span> <span class="fu">html</span><span class="vs">`&lt;span&gt;&lt;span class="swatch </span><span class="sc">${</span>cls<span class="sc">}</span><span class="vs">" style="</span><span class="sc">${</span>style<span class="sc">}</span><span class="vs">"&gt;&lt;/span&gt;</span><span class="sc">${</span>text<span class="sc">}</span><span class="vs">&lt;/span&gt;`</span>)<span class="sc">}</span><span class="vs">&lt;/div&gt;`</span></span>
 <span id="cb21-174"><a href="#cb21-174" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb21-175"><a href="#cb21-175" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-176"><a href="#cb21-176" aria-hidden="true" tabindex="-1"></a><span class="fu">## Where does it really stand?</span></span>
+<span id="cb21-176"><a href="#cb21-176" aria-hidden="true" tabindex="-1"></a><span class="fu">## Where does this jurisdiction stand?</span></span>
 <span id="cb21-177"><a href="#cb21-177" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-180"><a href="#cb21-180" aria-hidden="true" tabindex="-1"></a><span class="in">```{ojs}</span></span>
 <span id="cb21-181"><a href="#cb21-181" aria-hidden="true" tabindex="-1"></a><span class="fu">md</span><span class="vs">`In </span><span class="sc">${</span>latest<span class="sc">}</span><span class="vs">, **</span><span class="sc">${</span>name<span class="sc">}</span><span class="vs">**'s average </span><span class="sc">${</span>label<span class="sc">}</span><span class="vs"> score was **</span><span class="sc">${</span><span class="bu">Math</span><span class="op">.</span><span class="fu">round</span>(me<span class="op">.</span><span class="at">mean</span>)<span class="sc">}</span><span class="vs">**. By raw score that is</span></span>
@@ -1798,7 +1798,7 @@ window._ojs.runtime.interpretFromScriptTags();
 <span id="cb21-353"><a href="#cb21-353" aria-hidden="true" tabindex="-1"></a>Numbers are the change in average score from 2019 to 2024, in scale points.</span>
 <span id="cb21-354"><a href="#cb21-354" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb21-355"><a href="#cb21-355" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-356"><a href="#cb21-356" aria-hidden="true" tabindex="-1"></a><span class="fu">## Who lost ground?</span></span>
+<span id="cb21-356"><a href="#cb21-356" aria-hidden="true" tabindex="-1"></a><span class="fu">## Who was affected most?</span></span>
 <span id="cb21-357"><a href="#cb21-357" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-358"><a href="#cb21-358" aria-hidden="true" tabindex="-1"></a>An average can hide a widening spread. NAEP also reports the scores at the 10th, 25th,</span>
 <span id="cb21-359"><a href="#cb21-359" aria-hidden="true" tabindex="-1"></a>50th, 75th, and 90th percentiles, which show whether lower- and higher-performing</span>
@@ -1882,7 +1882,7 @@ window._ojs.runtime.interpretFromScriptTags();
 <span id="cb21-447"><a href="#cb21-447" aria-hidden="true" tabindex="-1"></a>**Source.** National Assessment of Educational Progress (NAEP), mathematics and reading,</span>
 <span id="cb21-448"><a href="#cb21-448" aria-hidden="true" tabindex="-1"></a>grades 4 and 8, 2003 to 2024, public schools. Estimates and significance tests come from the</span>
 <span id="cb21-449"><a href="#cb21-449" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">NAEP Data Service API</span><span class="co">](https://www.nationsreportcard.gov/api_endpoint.aspx)</span> of the National</span>
-<span id="cb21-450"><a href="#cb21-450" aria-hidden="true" tabindex="-1"></a>Center for Education Statistics. <span class="in">`scripts/fetch_naep.R`</span> rebuilds the data files.</span>
+<span id="cb21-450"><a href="#cb21-450" aria-hidden="true" tabindex="-1"></a>Center for Education Statistics.</span>
 <span id="cb21-451"><a href="#cb21-451" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-452"><a href="#cb21-452" aria-hidden="true" tabindex="-1"></a>**Significance tests.** Every "significantly higher", "lower", or "not significantly different"</span>
 <span id="cb21-453"><a href="#cb21-453" aria-hidden="true" tabindex="-1"></a>on this page is NCES's own determination, as returned by the API. Nothing is re-estimated here.</span>

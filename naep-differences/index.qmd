@@ -165,7 +165,7 @@ tileMap = rows => Plot.plot({
 key = items => html`<div class="key">${items.map(([cls, style, text]) => html`<span><span class="swatch ${cls}" style="${style}"></span>${text}</span>`)}</div>`
 ```
 
-## Where does it really stand?
+## Where does this jurisdiction stand?
 
 ```{ojs}
 md`In ${latest}, **${name}**'s average ${label} score was **${Math.round(me.mean)}**. By raw score that is
@@ -323,7 +323,7 @@ tileMap(changeStates)
 Numbers are the change in average score from 2019 to 2024, in scale points.
 :::
 
-## Who lost ground?
+## Who was affected most?
 
 An average can hide a widening spread. NAEP also reports the scores at the 10th, 25th,
 50th, 75th, and 90th percentiles, which show whether lower- and higher-performing
@@ -407,7 +407,7 @@ Inputs.table(ranked.map((d, i) => ({
 **Source.** National Assessment of Educational Progress (NAEP), mathematics and reading,
 grades 4 and 8, 2003 to 2024, public schools. Estimates and significance tests come from the
 [NAEP Data Service API](https://www.nationsreportcard.gov/api_endpoint.aspx) of the National
-Center for Education Statistics. `scripts/fetch_naep.R` rebuilds the data files.
+Center for Education Statistics.
 
 **Significance tests.** Every "significantly higher", "lower", or "not significantly different"
 on this page is NCES's own determination, as returned by the API. Nothing is re-estimated here.
