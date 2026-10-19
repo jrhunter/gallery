@@ -144,7 +144,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Select a jurisdiction, a subject, and grade:</p>
 <div class="cell">
 <details class="code-fold">
-<summary>Show the R code</summary>
+<summary>Reveal R code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -186,7 +186,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <details class="code-fold hidden">
-<summary>Show the R code</summary>
+<summary>Reveal R code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="90" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 89;"><span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>est <span class="op">=</span> <span class="fu">transpose</span>(estimates_cols)</span>
 <span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>stateTests <span class="op">=</span> <span class="fu">transpose</span>(state_tests_cols)</span>
 <span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>yearTests <span class="op">=</span> <span class="fu">transpose</span>(year_tests_cols)</span>
@@ -299,7 +299,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="controls">
 <div class="cell">
 <details class="code-fold hidden">
-<summary>Show the R code</summary>
+<summary>Reveal R code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="111" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 110;"><span id="cb3-111"><a href="#cb3-111" aria-hidden="true" tabindex="-1"></a>viewof focal <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>(jurisdictions<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"Jurisdiction"</span><span class="op">,</span> <span class="dt">format</span><span class="op">:</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">jurisdiction</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> jurisdictions<span class="op">.</span><span class="fu">find</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">code</span> <span class="op">===</span> <span class="st">"MD"</span>)})</span>
 <span id="cb3-112"><a href="#cb3-112" aria-hidden="true" tabindex="-1"></a>viewof subject <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">radio</span>([<span class="st">"Mathematics"</span><span class="op">,</span> <span class="st">"Reading"</span>]<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"Subject"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"Mathematics"</span>})</span>
 <span id="cb3-113"><a href="#cb3-113" aria-hidden="true" tabindex="-1"></a>viewof grade <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">radio</span>([<span class="dv">4</span><span class="op">,</span> <span class="dv">8</span>]<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"Grade"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="dv">8</span><span class="op">,</span> <span class="dt">format</span><span class="op">:</span> d <span class="kw">=&gt;</span> <span class="vs">`Grade </span><span class="sc">${</span>d<span class="sc">}</span><span class="vs">`</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -329,7 +329,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <details class="code-fold hidden">
-<summary>Show the R code</summary>
+<summary>Reveal R code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb4" data-startfrom="120" data-source-offset="-22"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 119;"><span id="cb4-120"><a href="#cb4-120" aria-hidden="true" tabindex="-1"></a>name <span class="op">=</span> focal<span class="op">.</span><span class="at">jurisdiction</span></span>
 <span id="cb4-121"><a href="#cb4-121" aria-hidden="true" tabindex="-1"></a>cur <span class="op">=</span> est<span class="op">.</span><span class="fu">filter</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">subject</span> <span class="op">===</span> subject <span class="op">&amp;&amp;</span> d<span class="op">.</span><span class="at">grade</span> <span class="op">===</span> grade)</span>
 <span id="cb4-122"><a href="#cb4-122" aria-hidden="true" tabindex="-1"></a>now <span class="op">=</span> cur<span class="op">.</span><span class="fu">filter</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">year</span> <span class="op">===</span> latest)</span>
@@ -501,7 +501,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="where-does-this-jurisdiction-stand">Where does this jurisdiction stand?</h2>
 <div class="cell">
 <details class="code-fold hidden">
-<summary>Show the R code</summary>
+<summary>Reveal R code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb5" data-startfrom="170" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 169;"><span id="cb5-170"><a href="#cb5-170" aria-hidden="true" tabindex="-1"></a><span class="fu">md</span><span class="vs">`In </span><span class="sc">${</span>latest<span class="sc">}</span><span class="vs">, **</span><span class="sc">${</span>name<span class="sc">}</span><span class="vs">**'s average </span><span class="sc">${</span>label<span class="sc">}</span><span class="vs"> score was **</span><span class="sc">${</span><span class="bu">Math</span><span class="op">.</span><span class="fu">round</span>(me<span class="op">.</span><span class="at">mean</span>)<span class="sc">}</span><span class="vs">**. By raw score that is</span></span>
 <span id="cb5-171"><a href="#cb5-171" aria-hidden="true" tabindex="-1"></a><span class="vs">**</span><span class="sc">${</span><span class="fu">ordinal</span>(rank<span class="op">.</span><span class="at">raw_rank</span>)<span class="sc">}</span><span class="vs"> of </span><span class="sc">${</span>rank<span class="op">.</span><span class="at">n</span><span class="sc">}</span><span class="vs">** jurisdictions. But </span><span class="sc">${</span><span class="fu">count</span>(rank<span class="op">.</span><span class="at">n_same</span><span class="op">,</span> <span class="st">"jurisdiction"</span>)<span class="sc">}</span><span class="vs"> had</span></span>
 <span id="cb5-172"><a href="#cb5-172" aria-hidden="true" tabindex="-1"></a><span class="sc">${</span>rank<span class="op">.</span><span class="at">n_same</span> <span class="op">===</span> <span class="dv">1</span> <span class="op">?</span> <span class="st">"a score"</span> <span class="op">:</span> <span class="st">"scores"</span><span class="sc">}</span><span class="vs"> that NCES found *not significantly different* from </span><span class="sc">${</span>name<span class="sc">}</span><span class="vs">'s.</span></span>
@@ -516,7 +516,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <details class="code-fold hidden">
-<summary>Show the R code</summary>
+<summary>Reveal R code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb6" data-startfrom="179" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 178;"><span id="cb6-179"><a href="#cb6-179" aria-hidden="true" tabindex="-1"></a>vsNation <span class="op">=</span> tests<span class="op">.</span><span class="fu">get</span>(NATION)</span>
 <span id="cb6-180"><a href="#cb6-180" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;div class="tiles"&gt;</span></span>
 <span id="cb6-181"><a href="#cb6-181" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;div class="tile"&gt;&lt;div class="tile-label"&gt;Average score, </span><span class="sc">${</span>latest<span class="sc">}</span><span class="vs">&lt;/div&gt;&lt;div class="tile-value"&gt;</span><span class="sc">${</span><span class="bu">Math</span><span class="op">.</span><span class="fu">round</span>(me<span class="op">.</span><span class="at">mean</span>)<span class="sc">}</span><span class="vs">&lt;/div&gt;</span></span>
@@ -548,7 +548,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="every-jurisdiction-compared-with-the-selected-one">Every jurisdiction, compared with the selected one</h3>
 <div class="cell">
 <details class="code-fold hidden">
-<summary>Show the R code</summary>
+<summary>Reveal R code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb7" data-startfrom="197" data-source-offset="-137"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 196;"><span id="cb7-197"><a href="#cb7-197" aria-hidden="true" tabindex="-1"></a>compared <span class="op">=</span> now<span class="op">.</span><span class="fu">filter</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">code</span> <span class="op">!==</span> NATION)<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> {</span>
 <span id="cb7-198"><a href="#cb7-198" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> isFocal <span class="op">=</span> d<span class="op">.</span><span class="at">code</span> <span class="op">===</span> focal<span class="op">.</span><span class="at">code</span></span>
 <span id="cb7-199"><a href="#cb7-199" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> t <span class="op">=</span> tests<span class="op">.</span><span class="fu">get</span>(d<span class="op">.</span><span class="at">code</span>)</span>
@@ -585,7 +585,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <details class="code-fold hidden">
-<summary>Show the R code</summary>
+<summary>Reveal R code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb8" data-startfrom="217" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 216;"><span id="cb8-217"><a href="#cb8-217" aria-hidden="true" tabindex="-1"></a><span class="fu">tileMap</span>(compared)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
@@ -602,7 +602,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="the-ranking-with-the-ties-marked">The ranking, with the ties marked</h3>
 <div class="cell">
 <details class="code-fold hidden">
-<summary>Show the R code</summary>
+<summary>Reveal R code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb9" data-startfrom="228" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 227;"><span id="cb9-228"><a href="#cb9-228" aria-hidden="true" tabindex="-1"></a>ranked <span class="op">=</span> d3<span class="op">.</span><span class="fu">sort</span>(compared<span class="op">,</span> d <span class="kw">=&gt;</span> <span class="op">-</span>d<span class="op">.</span><span class="at">mean</span>)</span>
 <span id="cb9-229"><a href="#cb9-229" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-230"><a href="#cb9-230" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">plot</span>({</span>
@@ -642,7 +642,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="has-it-recovered-since-2019">Has it recovered since 2019?</h2>
 <div class="cell">
 <details class="code-fold hidden">
-<summary>Show the R code</summary>
+<summary>Reveal R code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb10" data-startfrom="251" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 250;"><span id="cb10-251"><a href="#cb10-251" aria-hidden="true" tabindex="-1"></a>myTrend <span class="op">=</span> cur<span class="op">.</span><span class="fu">filter</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">code</span> <span class="op">===</span> focal<span class="op">.</span><span class="at">code</span>)</span>
 <span id="cb10-252"><a href="#cb10-252" aria-hidden="true" tabindex="-1"></a>usTrend <span class="op">=</span> cur<span class="op">.</span><span class="fu">filter</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">code</span> <span class="op">===</span> NATION)</span>
 <span id="cb10-253"><a href="#cb10-253" aria-hidden="true" tabindex="-1"></a>myYearTests <span class="op">=</span> <span class="kw">new</span> <span class="bu">Map</span>(overTime<span class="op">.</span><span class="fu">filter</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">code</span> <span class="op">===</span> focal<span class="op">.</span><span class="at">code</span> <span class="op">&amp;&amp;</span> d<span class="op">.</span><span class="at">stat</span> <span class="op">===</span> <span class="st">"mean"</span>)<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> [d<span class="op">.</span><span class="at">earlier_year</span><span class="op">,</span> d]))</span>
@@ -705,7 +705,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <details class="code-fold hidden">
-<summary>Show the R code</summary>
+<summary>Reveal R code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb11" data-startfrom="262" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 261;"><span id="cb11-262"><a href="#cb11-262" aria-hidden="true" tabindex="-1"></a><span class="fu">key</span>([</span>
 <span id="cb11-263"><a href="#cb11-263" aria-hidden="true" tabindex="-1"></a>  [<span class="st">""</span><span class="op">,</span> <span class="vs">`background:</span><span class="sc">${</span>HIGHER<span class="sc">}</span><span class="vs">; border-radius:50%`</span><span class="op">,</span> <span class="vs">`</span><span class="sc">${</span>name<span class="sc">}</span><span class="vs">: significantly different from </span><span class="sc">${</span>latest<span class="sc">}</span><span class="vs">`</span>]<span class="op">,</span></span>
 <span id="cb11-264"><a href="#cb11-264" aria-hidden="true" tabindex="-1"></a>  [<span class="st">""</span><span class="op">,</span> <span class="vs">`background:#fff; border:2.5px solid </span><span class="sc">${</span>HIGHER<span class="sc">}</span><span class="vs">; border-radius:50%`</span><span class="op">,</span> <span class="vs">`</span><span class="sc">${</span>name<span class="sc">}</span><span class="vs">: not significantly different from </span><span class="sc">${</span>latest<span class="sc">}</span><span class="vs">`</span>]<span class="op">,</span></span>
@@ -720,7 +720,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <details class="code-fold hidden">
-<summary>Show the R code</summary>
+<summary>Reveal R code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb12" data-startfrom="270" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 269;"><span id="cb12-270"><a href="#cb12-270" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">plot</span>({</span>
 <span id="cb12-271"><a href="#cb12-271" aria-hidden="true" tabindex="-1"></a>  <span class="dt">width</span><span class="op">:</span> W<span class="op">,</span> <span class="dt">height</span><span class="op">:</span> <span class="dv">320</span><span class="op">,</span> <span class="dt">marginLeft</span><span class="op">:</span> <span class="dv">46</span><span class="op">,</span> <span class="dt">marginRight</span><span class="op">:</span> <span class="dv">20</span><span class="op">,</span></span>
 <span id="cb12-272"><a href="#cb12-272" aria-hidden="true" tabindex="-1"></a>  <span class="dt">x</span><span class="op">:</span> {<span class="dt">label</span><span class="op">:</span> <span class="kw">null</span><span class="op">,</span> <span class="dt">ticks</span><span class="op">:</span> usTrend<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">year</span>)<span class="op">,</span> <span class="dt">tickFormat</span><span class="op">:</span> <span class="st">"d"</span>}<span class="op">,</span></span>
@@ -749,7 +749,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="the-same-test-in-every-jurisdiction">The same test in every jurisdiction</h3>
 <div class="cell">
 <details class="code-fold hidden">
-<summary>Show the R code</summary>
+<summary>Reveal R code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb13" data-startfrom="293" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 292;"><span id="cb13-293"><a href="#cb13-293" aria-hidden="true" tabindex="-1"></a>change <span class="op">=</span> now<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> {</span>
 <span id="cb13-294"><a href="#cb13-294" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> t <span class="op">=</span> overTime<span class="op">.</span><span class="fu">find</span>(t <span class="kw">=&gt;</span> t<span class="op">.</span><span class="at">code</span> <span class="op">===</span> d<span class="op">.</span><span class="at">code</span> <span class="op">&amp;&amp;</span> t<span class="op">.</span><span class="at">stat</span> <span class="op">===</span> <span class="st">"mean"</span> <span class="op">&amp;&amp;</span> t<span class="op">.</span><span class="at">earlier_year</span> <span class="op">===</span> <span class="dv">2019</span>)</span>
 <span id="cb13-295"><a href="#cb13-295" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> status <span class="op">=</span> <span class="op">!</span>t <span class="op">?</span> <span class="st">"none"</span> <span class="op">:</span> t<span class="op">.</span><span class="at">result</span></span>
@@ -796,7 +796,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <details class="code-fold hidden">
-<summary>Show the R code</summary>
+<summary>Reveal R code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb14" data-startfrom="309" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 308;"><span id="cb14-309"><a href="#cb14-309" aria-hidden="true" tabindex="-1"></a><span class="fu">key</span>([</span>
 <span id="cb14-310"><a href="#cb14-310" aria-hidden="true" tabindex="-1"></a>  [<span class="st">""</span><span class="op">,</span> <span class="vs">`background:</span><span class="sc">${</span>LOWER<span class="sc">}</span><span class="vs">`</span><span class="op">,</span> <span class="st">"Significantly lower than 2019"</span>]<span class="op">,</span></span>
 <span id="cb14-311"><a href="#cb14-311" aria-hidden="true" tabindex="-1"></a>  [<span class="st">""</span><span class="op">,</span> <span class="vs">`background:</span><span class="sc">${</span>SAME<span class="sc">}</span><span class="vs">`</span><span class="op">,</span> <span class="st">"Not significantly different"</span>]<span class="op">,</span></span>
@@ -812,7 +812,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <details class="code-fold hidden">
-<summary>Show the R code</summary>
+<summary>Reveal R code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb15" data-startfrom="318" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 317;"><span id="cb15-318"><a href="#cb15-318" aria-hidden="true" tabindex="-1"></a><span class="fu">tileMap</span>(changeStates)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
@@ -831,7 +831,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>An average can hide a widening spread. NAEP also reports the scores at the 10th, 25th, 50th, 75th, and 90th percentiles, which show whether lower- and higher-performing students moved together.</p>
 <div class="cell">
 <details class="code-fold hidden">
-<summary>Show the R code</summary>
+<summary>Reveal R code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb16" data-startfrom="333" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 332;"><span id="cb16-333"><a href="#cb16-333" aria-hidden="true" tabindex="-1"></a>PCT <span class="op">=</span> [[<span class="st">"p90"</span><span class="op">,</span> <span class="st">"90th percentile"</span>]<span class="op">,</span> [<span class="st">"p75"</span><span class="op">,</span> <span class="st">"75th"</span>]<span class="op">,</span> [<span class="st">"p50"</span><span class="op">,</span> <span class="st">"50th (median)"</span>]<span class="op">,</span> [<span class="st">"p25"</span><span class="op">,</span> <span class="st">"25th"</span>]<span class="op">,</span> [<span class="st">"p10"</span><span class="op">,</span> <span class="st">"10th percentile"</span>]]</span>
 <span id="cb16-334"><a href="#cb16-334" aria-hidden="true" tabindex="-1"></a>pctChange <span class="op">=</span> [focal<span class="op">.</span><span class="at">code</span><span class="op">,</span> NATION]<span class="op">.</span><span class="fu">flatMap</span>(code <span class="kw">=&gt;</span> PCT<span class="op">.</span><span class="fu">map</span>(([stat<span class="op">,</span> lab]) <span class="kw">=&gt;</span> {</span>
 <span id="cb16-335"><a href="#cb16-335" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> t <span class="op">=</span> overTime<span class="op">.</span><span class="fu">find</span>(t <span class="kw">=&gt;</span> t<span class="op">.</span><span class="at">code</span> <span class="op">===</span> code <span class="op">&amp;&amp;</span> t<span class="op">.</span><span class="at">stat</span> <span class="op">===</span> stat <span class="op">&amp;&amp;</span> t<span class="op">.</span><span class="at">earlier_year</span> <span class="op">===</span> <span class="dv">2019</span>)</span>
@@ -899,7 +899,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <details class="code-fold hidden">
-<summary>Show the R code</summary>
+<summary>Reveal R code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb17" data-startfrom="349" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 348;"><span id="cb17-349"><a href="#cb17-349" aria-hidden="true" tabindex="-1"></a><span class="fu">key</span>([</span>
 <span id="cb17-350"><a href="#cb17-350" aria-hidden="true" tabindex="-1"></a>  [<span class="st">""</span><span class="op">,</span> <span class="vs">`background:</span><span class="sc">${</span>HIGHER<span class="sc">}</span><span class="vs">; border-radius:50%`</span><span class="op">,</span> <span class="vs">`</span><span class="sc">${</span>name<span class="sc">}</span><span class="vs">: significant change`</span>]<span class="op">,</span></span>
 <span id="cb17-351"><a href="#cb17-351" aria-hidden="true" tabindex="-1"></a>  [<span class="st">""</span><span class="op">,</span> <span class="vs">`background:#fff; border:2.5px solid </span><span class="sc">${</span>HIGHER<span class="sc">}</span><span class="vs">; border-radius:50%`</span><span class="op">,</span> <span class="vs">`</span><span class="sc">${</span>name<span class="sc">}</span><span class="vs">: not significant`</span>]<span class="op">,</span></span>
@@ -915,7 +915,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <details class="code-fold hidden">
-<summary>Show the R code</summary>
+<summary>Reveal R code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb18" data-startfrom="358" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 357;"><span id="cb18-358"><a href="#cb18-358" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">plot</span>({</span>
 <span id="cb18-359"><a href="#cb18-359" aria-hidden="true" tabindex="-1"></a>  <span class="dt">width</span><span class="op">:</span> W<span class="op">,</span> <span class="dt">height</span><span class="op">:</span> <span class="dv">320</span><span class="op">,</span> <span class="dt">marginLeft</span><span class="op">:</span> <span class="dv">120</span><span class="op">,</span> <span class="dt">marginRight</span><span class="op">:</span> <span class="dv">30</span><span class="op">,</span> <span class="dt">marginBottom</span><span class="op">:</span> <span class="dv">46</span><span class="op">,</span></span>
 <span id="cb18-360"><a href="#cb18-360" aria-hidden="true" tabindex="-1"></a>  <span class="dt">x</span><span class="op">:</span> {<span class="dt">label</span><span class="op">:</span> <span class="vs">`Change in score, 2019 to </span><span class="sc">${</span>latest<span class="sc">}</span><span class="vs"> (scale points)`</span><span class="op">,</span> <span class="dt">labelOffset</span><span class="op">:</span> <span class="dv">40</span><span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">nice</span><span class="op">:</span> <span class="kw">true</span>}<span class="op">,</span></span>
@@ -941,7 +941,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="the-whole-distribution-since-2003">The whole distribution since 2003</h3>
 <div class="cell">
 <details class="code-fold hidden">
-<summary>Show the R code</summary>
+<summary>Reveal R code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb19" data-startfrom="378" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 377;"><span id="cb19-378"><a href="#cb19-378" aria-hidden="true" tabindex="-1"></a>fan <span class="op">=</span> myTrend<span class="op">.</span><span class="fu">flatMap</span>(d <span class="kw">=&gt;</span> PCT<span class="op">.</span><span class="fu">map</span>(([stat<span class="op">,</span> lab]) <span class="kw">=&gt;</span> ({<span class="dt">year</span><span class="op">:</span> d<span class="op">.</span><span class="at">year</span><span class="op">,</span> stat<span class="op">,</span> <span class="dt">lab</span><span class="op">:</span> lab<span class="op">.</span><span class="fu">replace</span>(<span class="st">" percentile"</span><span class="op">,</span> <span class="st">""</span>)<span class="op">.</span><span class="fu">replace</span>(<span class="st">" (median)"</span><span class="op">,</span> <span class="st">""</span>)<span class="op">,</span> <span class="dt">score</span><span class="op">:</span> d[stat]})))<span class="op">.</span><span class="fu">filter</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">score</span> <span class="op">!=</span> <span class="kw">null</span>)</span>
 <span id="cb19-379"><a href="#cb19-379" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-380"><a href="#cb19-380" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">plot</span>({</span>
@@ -977,7 +977,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="the-comparison-as-a-table">The comparison as a table</h2>
 <div class="cell">
 <details class="code-fold hidden">
-<summary>Show the R code</summary>
+<summary>Reveal R code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb20" data-startfrom="395" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 394;"><span id="cb20-395"><a href="#cb20-395" aria-hidden="true" tabindex="-1"></a>Inputs<span class="op">.</span><span class="fu">table</span>(ranked<span class="op">.</span><span class="fu">map</span>((d<span class="op">,</span> i) <span class="kw">=&gt;</span> ({</span>
 <span id="cb20-396"><a href="#cb20-396" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Raw rank"</span><span class="op">:</span> i <span class="op">+</span> <span class="dv">1</span><span class="op">,</span></span>
 <span id="cb20-397"><a href="#cb20-397" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Jurisdiction</span><span class="op">:</span> d<span class="op">.</span><span class="at">jurisdiction</span><span class="op">,</span></span>
@@ -1484,7 +1484,7 @@ window._ojs.runtime.interpretFromScriptTags();
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-depth: 2</span></span>
 <span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="co">    code-summary: "Show the R code"</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="co">    code-summary: "Reveal R code"</span></span>
 <span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
 <span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="co">    embed-resources: false</span></span>
 <span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
