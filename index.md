@@ -18,7 +18,7 @@ An interactive Shiny dashboard, hosted by AccessLex.
 ## NAEP state comparisons
 
 An interactive page asking which differences in 2024 state NAEP scores are
-statistically meaningful. Users pick a state, a subject, and grade; the pageshows which states
+statistically meaningful. Users pick a state, a subject, and grade; the page shows which states
 scored significantly higher or lower, the range of ranks those differences
 support, whether the state has recovered since 2019, and how scores moved from
 the 10th to the 90th percentile. Built with R, Quarto, and Observable Plot,
