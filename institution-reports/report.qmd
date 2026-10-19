@@ -7,7 +7,7 @@ format:
     toc: true
     toc-depth: 2
     code-fold: true
-    code-summary: "Show the SQL"
+    code-summary: "Reveal SQL code"
     code-tools: true
     df-print: default
     fig-align: left
