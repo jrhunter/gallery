@@ -9,7 +9,7 @@ format:
     toc: true
     toc-depth: 2
     code-fold: true
-    code-summary: "Show the R code"
+    code-summary: "Reveal R code"
     code-tools: true
     embed-resources: false
 execute:

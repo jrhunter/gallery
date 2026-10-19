@@ -5,7 +5,7 @@ format:
   html:
     theme: cosmo
     code-fold: true
-    code-summary: "Show the SQL"
+    code-summary: "Reveal SQL code"
     code-tools: true
 execute:
   echo: false
